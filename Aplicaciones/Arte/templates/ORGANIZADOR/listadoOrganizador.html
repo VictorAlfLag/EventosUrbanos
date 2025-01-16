@@ -1,0 +1,69 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<style>
+    .table-bordered > :not(caption) > * > * {
+        border-width: 0 var(--bs-border-width);
+        color: rgb(0, 0, 12);
+    }
+</style>
+
+<br>
+<div class="card">
+    <div class="card-title text-center">
+        <h3><b>Listado de Organizadores</b></h3>
+    </div>
+</div>  
+<br>
+<div style="text-align: center;">
+    <a href="{% url 'nuevoOrganizador' %}" class="btn btn-success">Agregar Organizador</a>
+    <button class="btn btn-primary" onclick="printTable()">Imprimir Reporte</button>
+</div>
+<table class="table table-bordered table-striped table-hover text-center" id="tbl-organizadores"> 
+    <thead>
+        <tr>
+            <th>Id del Organizador</th>
+            <th>Nombre</th>
+            <th>Entidad</th>
+            <th>Descripción</th>
+            <th>Contacto</th>
+            <th>Email de Contacto</th>
+            <th>Sitio Web</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for organizador in listado_organizadores %}
+        <tr>
+            <td>{{ organizador.id }}</td>
+            <td>{{ organizador.nombre }}</td>
+            <td>{{ organizador.entidad }}</td>
+            <td>{{ organizador.descripcion }}</td>
+            <td>{{ organizador.contacto }}</td>
+            <td>{{ organizador.email_contacto }}</td>
+            <td>{{ organizador.sitio_web }}</td>
+            <td>
+                <a href="{% url 'editarOrganizador' organizador.id %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'eliminarOrganizador' organizador.id %}" onclick="return confirm('¿Estás seguro de eliminar?')" class="btn btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function() {
+        $('#tbl-organizadores').DataTable();
+    });
+
+    function printTable() {
+        var printContents = document.getElementById('tbl-organizadores').outerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        location.reload();
+    }
+</script>
+
+{% endblock %}

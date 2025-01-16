@@ -1,0 +1,86 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<h1>EDITAR EVENTO</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'procesoActualizarEvento' %}" method="post" id="frm_evento">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ evento.id }}">
+                
+                <label for="titulo"><b>Título del Evento:</b></label>
+                <input type="text" name="titulo" class="form-control" value="{{ evento.titulo }}" id="titulo" placeholder="Ingrese el título del evento">
+
+                <label for="descripcion"><b>Descripción:</b></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese la descripción del evento">{{ evento.descripcion }}</textarea>
+
+                <label for="fecha_inicio"><b>Fecha de Inicio:</b></label>
+                <input type="datetime-local" name="fecha_inicio" class="form-control" value="{{ evento.fecha_inicio|date:"Y-m-d\TH:i" }}">
+
+                <label for="fecha_fin"><b>Fecha de Fin:</b></label>
+                <input type="datetime-local" name="fecha_fin" class="form-control" value="{{ evento.fecha_fin|date:"Y-m-d\TH:i" }}">
+
+                <label for="estado"><b>Estado:</b></label>
+                <select name="estado" id="estado" class="form-control">
+                    <option value="activo" {% if evento.estado == 'activo' %}selected{% endif %}>Activo</option>
+                    <option value="finalizado" {% if evento.estado == 'finalizado' %}selected{% endif %}>Finalizado</option>
+                </select>
+
+                <br>
+                <button type="submit" class="btn btn-warning">Actualizar</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'listado_eventos' %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#frm_evento').validate({
+        rules: {
+            titulo: {
+                required: true,
+                minlength: 3,
+                maxlength: 255,
+            },
+            descripcion: {
+                required: true,
+                minlength: 10,
+            },
+            fecha_inicio: {
+                required: true,
+                date: true,
+            },
+            fecha_fin: {
+                required: true,
+                date: true,
+            },
+            estado: {
+                required: true,
+            },
+        },
+        messages: {
+            titulo: {
+                required: 'El título del evento es obligatorio',
+                minlength: 'El título debe tener al menos 3 caracteres',
+                maxlength: 'El título debe tener menos de 255 caracteres',
+            },
+            descripcion: {
+                required: 'La descripción es obligatoria',
+                minlength: 'La descripción debe tener al menos 10 caracteres',
+            },
+            fecha_inicio: {
+                required: 'La fecha de inicio es obligatoria',
+            },
+            fecha_fin: {
+                required: 'La fecha de fin es obligatoria',
+            },
+            estado: {
+                required: 'El estado es obligatorio',
+            },
+        },
+    });
+</script>
+
+{% endblock %}

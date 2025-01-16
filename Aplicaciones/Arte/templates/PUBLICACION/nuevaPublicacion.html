@@ -1,0 +1,61 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'guardarUbicacion' %}" method="post" id="frm_ubicacion">
+                {% csrf_token %}
+                
+                <label for="nombre">Nombre de la Ubicación: <br></label>
+                <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre de la ubicación">
+
+                <label for="direccion">Dirección: <br></label>
+                <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Ingrese la dirección de la ubicación">
+
+                <label for="descripcion">Descripción: <br></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese una descripción de la ubicación"></textarea>
+
+                <br>
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#frm_ubicacion').validate({
+        rules: {
+            nombre: {
+                required: true,
+                minlength: 3,
+                maxlength: 255,
+            },
+            direccion: {
+                required: true,
+                minlength: 5,
+            },
+            descripcion: {
+                required: true,
+                minlength: 10,
+            },
+        },
+        messages: {
+            nombre: {
+                required: 'El nombre de la ubicación es obligatorio',
+                minlength: 'El nombre debe tener al menos 3 caracteres',
+                maxlength: 'El nombre debe tener menos de 255 caracteres',
+            },
+            direccion: {
+                required: 'La dirección es obligatoria',
+                minlength: 'La dirección debe tener al menos 5 caracteres',
+            },
+            descripcion: {
+                required: 'La descripción es obligatoria',
+                minlength: 'La descripción debe tener al menos 10 caracteres',
+            },
+        },
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<h1>EDITAR PUBLICACIÓN DE EVENTO</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'procesoActualizarPublicacionEvento' %}" method="post" id="frm_publicacion_evento">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ publicacion.id }}">
+                
+                <label for="evento"><b>Evento:</b></label>
+                <input type="text" name="evento" class="form-control" value="{{ publicacion.evento }}" id="evento" placeholder="Ingrese el evento">
+
+                <label for="hora_evento"><b>Hora del Evento:</b></label>
+                <input type="time" name="hora_evento" class="form-control" value="{{ publicacion.hora_evento }}">
+
+                <label for="contenido_publico"><b>Contenido Público:</b></label>
+                <textarea name="contenido_publico" class="form-control" id="contenido_publico" placeholder="Ingrese el contenido público del evento">{{ publicacion.contenido_publico }}</textarea>
+
+                <label for="imagen_evento"><b>Imagen del Evento:</b></label>
+                <input type="file" name="imagen_evento" class="form-control" accept="image/*">
+
+                <label for="estado_publicacion"><b>Estado de Publicación:</b></label>
+                <select name="estado_publicacion" id="estado_publicacion" class="form-control">
+                    <option value="publicado" {% if publicacion.estado_publicacion == 'publicado' %}selected{% endif %}>Publicado</option>
+                    <option value="no_publicado" {% if publicacion.estado_publicacion == 'no_publicado' %}selected{% endif %}>No Publicado</option>
+                </select>
+
+                <br>
+                <button type="submit" class="btn btn-warning">Actualizar</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'listado_publicaciones' %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#frm_publicacion_evento').validate({
+        rules: {
+            evento: {
+                required: true,
+            },
+            hora_evento: {
+                required: true,
+            },
+            contenido_publico: {
+                required: true,
+                minlength: 10,
+            },
+            imagen_evento: {
+                required: false,
+            },
+            estado_publicacion: {
+                required: true,
+            },
+        },
+        messages: {
+            evento: {
+                required: 'El evento es obligatorio',
+            },
+            hora_evento: {
+                required: 'La hora del evento es obligatoria',
+            },
+            contenido_publico: {
+                required: 'El contenido público es obligatorio',
+                minlength: 'El contenido debe tener al menos 10 caracteres',
+            },
+            imagen_evento: {
+                required: 'La imagen es obligatoria',
+            },
+            estado_publicacion: {
+                required: 'El estado de la publicación es obligatorio',
+            },
+        },
+    });
+</script>
+
+{% endblock %}

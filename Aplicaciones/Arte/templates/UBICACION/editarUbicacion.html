@@ -1,0 +1,65 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<h1>EDITAR UBICACIÓN</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'procesoActualizarUbicacion' %}" method="post" id="frm_ubicacion">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ ubicacion.id }}">
+                
+                <label for="nombre"><b>Nombre de la Ubicación:</b></label>
+                <input type="text" name="nombre" class="form-control" value="{{ ubicacion.nombre }}" id="nombre" placeholder="Ingrese el nombre de la ubicación">
+
+                <label for="direccion"><b>Dirección:</b></label>
+                <input type="text" name="direccion" class="form-control" value="{{ ubicacion.direccion }}" id="direccion" placeholder="Ingrese la dirección de la ubicación">
+
+                <label for="descripcion"><b>Descripción:</b></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese una descripción de la ubicación">{{ ubicacion.descripcion }}</textarea>
+
+                <br>
+                <button type="submit" class="btn btn-warning">Actualizar</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'listado_ubicaciones' %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#frm_ubicacion').validate({
+        rules: {
+            nombre: {
+                required: true,
+                minlength: 3,
+                maxlength: 255,
+            },
+            direccion: {
+                required: true,
+                minlength: 5,
+            },
+            descripcion: {
+                required: true,
+                minlength: 10,
+            },
+        },
+        messages: {
+            nombre: {
+                required: 'El nombre de la ubicación es obligatorio',
+                minlength: 'El nombre debe tener al menos 3 caracteres',
+                maxlength: 'El nombre debe tener menos de 255 caracteres',
+            },
+            direccion: {
+                required: 'La dirección es obligatoria',
+                minlength: 'La dirección debe tener al menos 5 caracteres',
+            },
+            descripcion: {
+                required: 'La descripción es obligatoria',
+                minlength: 'La descripción debe tener al menos 10 caracteres',
+            },
+        },
+    });
+</script>
+
+{% endblock %}

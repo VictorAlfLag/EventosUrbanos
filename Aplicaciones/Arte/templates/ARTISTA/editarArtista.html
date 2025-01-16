@@ -1,0 +1,93 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<h1>EDITAR ARTISTA</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'procesoActualizarArtista' %}" method="post" enctype="multipart/form-data" id="frm_artista">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ artista.id }}">
+                
+                <label for="nombre"><b>Nombre del Artista:</b></label>
+                <input type="text" name="nombre" class="form-control" value="{{ artista.nombre }}" id="nombre" placeholder="Ingrese el nombre del artista">
+
+                <label for="descripcion"><b>Descripción:</b></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese una descripción del artista">{{ artista.descripcion }}</textarea>
+
+                <label for="telefono"><b>Teléfono:</b></label>
+                <input type="text" name="telefono" class="form-control" value="{{ artista.telefono }}" id="telefono" placeholder="Ingrese el teléfono del artista">
+
+                <label for="email"><b>Correo Electrónico:</b></label>
+                <input type="email" name="email" class="form-control" value="{{ artista.email }}" id="email" placeholder="Ingrese el correo electrónico del artista">
+
+                <label for="redes_sociales"><b>Redes Sociales:</b></label>
+                <textarea name="redes_sociales" class="form-control" id="redes_sociales" placeholder="Ingrese las redes sociales del artista">{{ artista.redes_sociales }}</textarea>
+
+                <label for="sitio_web"><b>Sitio Web:</b></label>
+                <input type="url" name="sitio_web" class="form-control" value="{{ artista.sitio_web }}" id="sitio_web" placeholder="Ingrese el sitio web del artista">
+
+                <br>
+                <button type="submit" class="btn btn-warning">Actualizar</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'listado_artistas' %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#frm_artista').validate({
+        rules: {
+            nombre: {
+                required: true,
+                minlength: 3,
+                maxlength: 255,
+            },
+            descripcion: {
+                required: true,
+                minlength: 10,
+            },
+            telefono: {
+                required: false,
+                minlength: 7,
+                maxlength: 15,
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+            redes_sociales: {
+                required: false,
+            },
+            sitio_web: {
+                required: false,
+                url: true,
+            },
+        },
+        messages: {
+            nombre: {
+                required: 'El nombre del artista es obligatorio',
+                minlength: 'El nombre debe tener al menos 3 caracteres',
+                maxlength: 'El nombre debe tener menos de 255 caracteres',
+            },
+            descripcion: {
+                required: 'La descripción es obligatoria',
+                minlength: 'La descripción debe tener al menos 10 caracteres',
+            },
+            telefono: {
+                minlength: 'El teléfono debe tener al menos 7 caracteres',
+                maxlength: 'El teléfono debe tener menos de 15 caracteres',
+            },
+            email: {
+                required: 'El correo electrónico es obligatorio',
+                email: 'Por favor, ingrese un correo electrónico válido',
+            },
+            sitio_web: {
+                url: 'Por favor, ingrese una URL válida',
+            },
+        },
+    });
+</script>
+
+{% endblock %}

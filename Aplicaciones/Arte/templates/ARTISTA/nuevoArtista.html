@@ -1,0 +1,93 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'guardarArtista' %}" enctype="multipart/form-data" method="post" id="frm_artista">
+                {% csrf_token %}
+                
+                <label for="nombre">Nombre del Artista: <br></label>
+                <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre del artista">
+
+                <label for="descripcion">Descripción: <br></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese una descripción del artista"></textarea>
+
+                <label for="telefono">Teléfono: <br></label>
+                <input type="text" name="telefono" class="form-control" id="telefono" placeholder="Ingrese el teléfono del artista">
+
+                <label for="email">Correo Electrónico: <br></label>
+                <input type="email" name="email" class="form-control" id="email" placeholder="Ingrese el correo electrónico del artista">
+
+                <label for="redes_sociales">Redes Sociales: <br></label>
+                <textarea name="redes_sociales" class="form-control" id="redes_sociales" placeholder="Ingrese las redes sociales del artista"></textarea>
+
+                <label for="sitio_web">Sitio Web: <br></label>
+                <input type="url" name="sitio_web" class="form-control" id="sitio_web" placeholder="Ingrese el sitio web del artista">
+
+                <br>
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.validator.addMethod('lettersonly', function (value, element) {
+        return this.optional(element) || /^[a-zA-Z\s]*$/.test(value);
+    }, 'Solo se permiten letras en este campo');
+
+    $('#frm_artista').validate({
+        rules: {
+            nombre: {
+                required: true,
+                minlength: 3,
+                maxlength: 255,
+            },
+            descripcion: {
+                required: true,
+                minlength: 10,
+            },
+            telefono: {
+                required: false,
+                minlength: 7,
+                maxlength: 15,
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+            redes_sociales: {
+                required: false,
+            },
+            sitio_web: {
+                required: false,
+                url: true,
+            },
+        },
+        messages: {
+            nombre: {
+                required: 'El nombre del artista es obligatorio',
+                minlength: 'El nombre debe tener al menos 3 caracteres',
+                maxlength: 'El nombre debe tener menos de 255 caracteres',
+            },
+            descripcion: {
+                required: 'La descripción es obligatoria',
+                minlength: 'La descripción debe tener al menos 10 caracteres',
+            },
+            telefono: {
+                minlength: 'El teléfono debe tener al menos 7 caracteres',
+                maxlength: 'El teléfono debe tener menos de 15 caracteres',
+            },
+            email: {
+                required: 'El correo electrónico es obligatorio',
+                email: 'Por favor, ingrese un correo electrónico válido',
+            },
+            sitio_web: {
+                url: 'Por favor, ingrese una URL válida',
+            },
+        },
+    });
+</script>
+
+{% endblock %}

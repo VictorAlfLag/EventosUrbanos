@@ -1,0 +1,92 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<h1>EDITAR ORGANIZADOR</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'procesoActualizarOrganizador' %}" method="post" id="frm_organizador">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ organizador.id }}">
+                
+                <label for="nombre"><b>Nombre del Organizador:</b></label>
+                <input type="text" name="nombre" class="form-control" value="{{ organizador.nombre }}" id="nombre" placeholder="Ingrese el nombre del organizador">
+
+                <label for="entidad"><b>Entidad:</b></label>
+                <input type="text" name="entidad" class="form-control" value="{{ organizador.entidad }}" id="entidad" placeholder="Ingrese la entidad del organizador">
+
+                <label for="descripcion"><b>Descripción:</b></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese una descripción del organizador">{{ organizador.descripcion }}</textarea>
+
+                <label for="contacto"><b>Contacto:</b></label>
+                <input type="text" name="contacto" class="form-control" value="{{ organizador.contacto }}" id="contacto" placeholder="Ingrese el contacto del organizador">
+
+                <label for="email_contacto"><b>Correo de Contacto:</b></label>
+                <input type="email" name="email_contacto" class="form-control" value="{{ organizador.email_contacto }}" id="email_contacto" placeholder="Ingrese el correo de contacto">
+
+                <label for="sitio_web"><b>Sitio Web:</b></label>
+                <input type="url" name="sitio_web" class="form-control" value="{{ organizador.sitio_web }}" id="sitio_web" placeholder="Ingrese el sitio web del organizador">
+
+                <br>
+                <button type="submit" class="btn btn-warning">Actualizar</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'listado_organizadores' %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#frm_organizador').validate({
+        rules: {
+            nombre: {
+                required: true,
+                minlength: 3,
+                maxlength: 255,
+            },
+            entidad: {
+                required: true,
+                minlength: 3,
+            },
+            descripcion: {
+                required: true,
+                minlength: 10,
+            },
+            contacto: {
+                required: false,
+            },
+            email_contacto: {
+                required: true,
+                email: true,
+            },
+            sitio_web: {
+                required: false,
+                url: true,
+            },
+        },
+        messages: {
+            nombre: {
+                required: 'El nombre del organizador es obligatorio',
+                minlength: 'El nombre debe tener al menos 3 caracteres',
+                maxlength: 'El nombre debe tener menos de 255 caracteres',
+            },
+            entidad: {
+                required: 'La entidad es obligatoria',
+                minlength: 'La entidad debe tener al menos 3 caracteres',
+            },
+            descripcion: {
+                required: 'La descripción es obligatoria',
+                minlength: 'La descripción debe tener al menos 10 caracteres',
+            },
+            email_contacto: {
+                required: 'El correo electrónico es obligatorio',
+                email: 'Por favor, ingrese un correo electrónico válido',
+            },
+            sitio_web: {
+                url: 'Por favor, ingrese una URL válida',
+            },
+        },
+    });
+</script>
+
+{% endblock %}
