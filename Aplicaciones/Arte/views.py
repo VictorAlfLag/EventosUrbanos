@@ -1,14 +1,25 @@
+<<<<<<< HEAD
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from Aplicaciones.Arte.forms import RegistroUsuarioForm
 from .models import Artista, Ubicacion, Organizador, Evento, PublicacionEvento
 from datetime import datetime
 from django.contrib.auth import authenticate, login
+=======
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import RegistroUsuarioForm
+from django.shortcuts import get_object_or_404
+from datetime import datetime
+>>>>>>> 8f99e044b8648af0827d61f17605141454ca18b1
 
 def home(request):
     return render(request, 'home.html')
 def home1(request):
     return render(request, 'home1.html')
+<<<<<<< HEAD
 # <----------Listado---------->
 def listadoArtistas(request):
     artistas = Artista.objects.all()
@@ -495,6 +506,9 @@ def eliminarPublicacionEvento(request, id):
     messages.success(request, "Publicación de evento eliminada exitosamente.")
     return redirect('listado_publicaciones')
 # <-------------Login-------->
+=======
+
+>>>>>>> 8f99e044b8648af0827d61f17605141454ca18b1
 def registro_usuario(request):
     if request.method == 'POST':
         form = RegistroUsuarioForm(request.POST)

@@ -8,6 +8,7 @@ urlpatterns = [
     path('registro/', views.registro_usuario, name='registro'),
     path('login/', views.login_view, name='login'),
     path('home1/', views.home1, name='home1'),
+<<<<<<< HEAD
  # Artista
     path('listadoArtistas/', views.listadoArtistas, name='listado_artistas'),
     path('eliminarArtista/<int:id>/', views.eliminarArtista, name='eliminar_artista'),
@@ -43,6 +44,9 @@ urlpatterns = [
     path('guardarPublicacionEvento/', views.guardarPublicacionEvento, name='guardar_publicacion_evento'),
     path('procesoActualizarPublicacionEvento/', views.procesoActualizarPublicacionEvento, name='proceso_actualizar_publicacion_evento'),
     path('nuevaPublicacionEvento/', views.nuevaPublicacionEvento, name='nueva_publicacion_evento'),
+=======
+
+>>>>>>> 8f99e044b8648af0827d61f17605141454ca18b1
 ]
 urlpatterns +=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
