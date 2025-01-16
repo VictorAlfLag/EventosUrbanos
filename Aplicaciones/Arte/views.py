@@ -6,6 +6,10 @@ from .forms import RegistroUsuarioForm
 from django.shortcuts import get_object_or_404
 from datetime import datetime
 
+def home(request):
+    return render(request, 'home.html')
+def home1(request):
+    return render(request, 'home1.html')
 
 def registro_usuario(request):
     if request.method == 'POST':
