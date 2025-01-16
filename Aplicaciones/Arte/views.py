@@ -16,7 +16,7 @@ def home1(request):
 # Artista Views
 def listadoArtistas(request):
     artistas = Artista.objects.all()
-    return render(request, "Artista/listado_artistas.html", {'artistas': artistas})
+    return render(request, "ARTISTA/listadoArtistas.html", {'artistas': artistas})
 
 def nuevoArtista(request):
     if request.method == 'POST':
@@ -39,7 +39,7 @@ def nuevoArtista(request):
         messages.success(request, "Artista registrado exitosamente.")
         return redirect('listado_artistas')
     
-    return render(request, 'Artista/nuevo_artista.html')
+    return render(request, 'ARTISTA/nuevoArtista.html')
 
 def editarArtista(request, id):
     artista = get_object_or_404(Artista, id=id)
@@ -54,7 +54,7 @@ def editarArtista(request, id):
         messages.success(request, "Artista actualizado correctamente.")
         return redirect('listado_artistas')
 
-    return render(request, 'Artista/editar_artista.html', {'artista': artista})
+    return render(request, 'ARTISTA/editarArtista.html', {'artista': artista})
 
 def eliminarArtista(request, id):
     artista = Artista.objects.get(id=id)
@@ -65,7 +65,7 @@ def eliminarArtista(request, id):
 # Ubicacion Views
 def listadoUbicaciones(request):
     ubicaciones = Ubicacion.objects.all()
-    return render(request, "Ubicacion/listado_ubicaciones.html", {'ubicaciones': ubicaciones})
+    return render(request, "UBICACION/listadoUbicacion.html", {'ubicaciones': ubicaciones})
 
 def nuevaUbicacion(request):
     if request.method == 'POST':
@@ -82,7 +82,7 @@ def nuevaUbicacion(request):
         messages.success(request, "Ubicación registrada exitosamente.")
         return redirect('listado_ubicaciones')
     
-    return render(request, 'Ubicacion/nueva_ubicacion.html')
+    return render(request, 'UBICACION/nuevaUbicacion.html')
 
 def editarUbicacion(request, id):
     ubicacion = get_object_or_404(Ubicacion, id=id)
@@ -94,7 +94,7 @@ def editarUbicacion(request, id):
         messages.success(request, "Ubicación actualizada correctamente.")
         return redirect('listado_ubicaciones')
 
-    return render(request, 'Ubicacion/editar_ubicacion.html', {'ubicacion': ubicacion})
+    return render(request, 'UBICACION/editarUbicacion.html', {'ubicacion': ubicacion})
 
 def eliminarUbicacion(request, id):
     ubicacion = Ubicacion.objects.get(id=id)
@@ -105,7 +105,7 @@ def eliminarUbicacion(request, id):
 # Organizador Views
 def listadoOrganizadores(request):
     organizadores = Organizador.objects.all()
-    return render(request, "Organizador/listado_organizadores.html", {'organizadores': organizadores})
+    return render(request, "ORGANIZADOR/listadoOrganizadores.html", {'organizadores': organizadores})
 
 def nuevoOrganizador(request):
     if request.method == 'POST':
@@ -128,7 +128,7 @@ def nuevoOrganizador(request):
         messages.success(request, "Organizador registrado exitosamente.")
         return redirect('listado_organizadores')
     
-    return render(request, 'Organizador/nuevo_organizador.html')
+    return render(request, 'ORGANIZADORES/nuevoOrganizador.html')
 
 def editarOrganizador(request, id):
     organizador = get_object_or_404(Organizador, id=id)
@@ -143,7 +143,7 @@ def editarOrganizador(request, id):
         messages.success(request, "Organizador actualizado correctamente.")
         return redirect('listado_organizadores')
 
-    return render(request, 'Organizador/editar_organizador.html', {'organizador': organizador})
+    return render(request, 'ORGANIZADOR/editarOrganizador.html', {'organizador': organizador})
 
 def eliminarOrganizador(request, id):
     organizador = Organizador.objects.get(id=id)
@@ -154,7 +154,7 @@ def eliminarOrganizador(request, id):
 # Evento Views
 def listadoEventos(request):
     eventos = Evento.objects.all()
-    return render(request, "Evento/listado_eventos.html", {'eventos': eventos})
+    return render(request, "EVENTO/listadoEventos.html", {'eventos': eventos})
 
 def nuevoEvento(request):
     if request.method == 'POST':
@@ -181,7 +181,7 @@ def nuevoEvento(request):
         messages.success(request, "Evento registrado exitosamente.")
         return redirect('listado_eventos')
     
-    return render(request, 'Evento/nuevo_evento.html')
+    return render(request, 'EVENTO/nuevoEvento.html')
 
 def editarEvento(request, id):
     evento = get_object_or_404(Evento, id=id)
@@ -195,7 +195,7 @@ def editarEvento(request, id):
         messages.success(request, "Evento actualizado correctamente.")
         return redirect('listado_eventos')
 
-    return render(request, 'Evento/editar_evento.html', {'evento': evento})
+    return render(request, 'EVENTO/editarEvento.html', {'evento': evento})
 
 def eliminarEvento(request, id):
     evento = Evento.objects.get(id=id)
@@ -206,7 +206,7 @@ def eliminarEvento(request, id):
 # PublicacionEvento Views
 def listadoPublicaciones(request):
     publicaciones = PublicacionEvento.objects.all()
-    return render(request, "PublicacionEvento/listado_publicaciones.html", {'publicaciones': publicaciones})
+    return render(request, "PUBLICACION/listadoPublicacion.html", {'publicaciones': publicaciones})
 
 def nuevaPublicacion(request):
     if request.method == 'POST':
@@ -229,7 +229,7 @@ def nuevaPublicacion(request):
         messages.success(request, "Publicación de evento registrada exitosamente.")
         return redirect('listado_publicaciones')
     
-    return render(request, 'PublicacionEvento/nueva_publicacion.html')
+    return render(request, 'PUBLICACION/nuevaPublicacion.html')
 
 def editarPublicacion(request, id):
     publicacion = get_object_or_404(PublicacionEvento, id=id)
