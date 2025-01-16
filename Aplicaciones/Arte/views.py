@@ -49,7 +49,7 @@ def nuevoArtista(request):
             sitio_web=sitio_web
         )
         return redirect('listado_artistas')
-    return render(request, 'artistas/nuevo.html')
+    return render(request, 'artistas/nuevoArtista.html')
 
 
 def nuevaUbicacion(request):
@@ -64,7 +64,7 @@ def nuevaUbicacion(request):
             descripcion=descripcion
         )
         return redirect('listado_ubicaciones')
-    return render(request, 'ubicaciones/nuevo.html')
+    return render(request, 'ubicaciones/nuevaUbicacion.html')
 
 
 def nuevoOrganizador(request):
@@ -85,7 +85,7 @@ def nuevoOrganizador(request):
             sitio_web=sitio_web
         )
         return redirect('listado_organizadores')
-    return render(request, 'organizadores/nuevo.html')
+    return render(request, 'organizadores/nuevoOrganizador.html')
 
 
 def nuevoEvento(request):
@@ -110,7 +110,7 @@ def nuevoEvento(request):
             estado=estado
         )
         return redirect('listado_eventos')
-    return render(request, 'eventos/nuevo.html')
+    return render(request, 'eventos/nuevoEvento.html')
 
 
 def nuevaPublicacionEvento(request):
@@ -132,31 +132,33 @@ def nuevaPublicacionEvento(request):
         )
         publicacion.artistas_presentados.set(request.POST.getlist('artistas_presentados'))
         return redirect('listado_publicaciones')
-    return render(request, 'publicaciones/nuevo.html')
+    return render(request, 'publicaciones/nuevaPublicacion.html')
 
 # <--------------Guardar--------------->
 def guardarArtista(request):
-    nombre = request.POST['nombre']
-    descripcion = request.POST['descripcion']
-    telefono = request.POST['telefono']
-    email = request.POST['email']
-    redes_sociales = request.POST['redes_sociales']
-    sitio_web = request.POST['sitio_web']
-    
-    artista = Artista.objects.create(
-        nombre=nombre,
-        descripcion=descripcion,
-        telefono=telefono,
-        email=email,
-        redes_sociales=redes_sociales,
-        sitio_web=sitio_web
-    )
-    
-    messages.success(request, "Artista registrado exitosamente.")
-    return redirect('listado_artistas')
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        descripcion = request.POST['descripcion']
+        telefono = request.POST['telefono']
+        email = request.POST['email']
+        redes_sociales = request.POST['redes_sociales']
+        sitio_web = request.POST['sitio_web']
+        
+        artista = Artista.objects.create(
+            nombre=nombre,
+            descripcion=descripcion,
+            telefono=telefono,
+            email=email,
+            redes_sociales=redes_sociales,
+            sitio_web=sitio_web
+        )
+        
+        messages.success(request, "Artista registrado exitosamente.")
+        return redirect('listado_artistas')
+    return redirect('formulario_artista')
 
-class GuardarUbicacion(View):
-    def post(self, request):
+def guardarUbicacion(request):
+    if request.method == 'POST':
         nombre = request.POST['nombre']
         direccion = request.POST['direccion']
         descripcion = request.POST['descripcion']
@@ -169,9 +171,10 @@ class GuardarUbicacion(View):
 
         messages.success(request, "Ubicación registrada exitosamente.")
         return redirect('listado_ubicaciones')
+    return redirect('formulario_ubicacion')
 
-class GuardarOrganizador(View):
-    def post(self, request):
+def guardarOrganizador(request):
+    if request.method == 'POST':
         nombre = request.POST['nombre']
         entidad = request.POST['entidad']
         descripcion = request.POST['descripcion']
@@ -190,9 +193,10 @@ class GuardarOrganizador(View):
 
         messages.success(request, "Organizador registrado exitosamente.")
         return redirect('listado_organizadores')
+    return redirect('formulario_organizador')
 
-class GuardarEvento(View):
-    def post(self, request):
+def guardarEvento(request):
+    if request.method == 'POST':
         artista_id = request.POST['artista']
         organizador_id = request.POST['organizador']
         ubicacion_id = request.POST['ubicacion']
@@ -207,9 +211,9 @@ class GuardarEvento(View):
         ubicacion = get_object_or_404(Ubicacion, id=ubicacion_id)
 
         Evento.objects.create(
-            ARTISTA=artista,
-            ORGANIZADOR=organizador,
-            UBICACION=ubicacion,
+            artista=artista,
+            organizador=organizador,
+            ubicacion=ubicacion,
             titulo=titulo,
             descripcion=descripcion,
             fecha_inicio=fecha_inicio,
@@ -219,9 +223,10 @@ class GuardarEvento(View):
 
         messages.success(request, "Evento registrado exitosamente.")
         return redirect('listado_eventos')
+    return redirect('formulario_evento')
 
-class GuardarPublicacionEvento(View):
-    def post(self, request):
+def guardarPublicacionEvento(request):
+    if request.method == 'POST':
         evento_id = request.POST['evento']
         contenido_publico = request.POST['contenido_publico']
         hora_evento = request.POST['hora_evento']
@@ -246,9 +251,25 @@ class GuardarPublicacionEvento(View):
 
         messages.success(request, "Publicación de evento registrada exitosamente.")
         return redirect('listado_publicaciones')
-
+    return redirect('formulario_publicacion_evento')
 
 # <----------Editar---------->
+def editarArtista(request, id):
+    artista = get_object_or_404(Artista, id=id)
+    
+    if request.method == 'POST':
+        artista.nombre = request.POST.get('nombre')
+        artista.descripcion = request.POST.get('descripcion')
+        artista.telefono = request.POST.get('telefono')
+        artista.email = request.POST.get('email')
+        artista.redes_sociales = request.POST.get('redes_sociales')
+        artista.sitio_web = request.POST.get('sitio_web')
+        
+        artista.save()
+        return redirect('listado_artistas')
+    
+    return render(request, 'artistas/editarArtista.html', {'artista': artista})
+
 def editarUbicacion(request, id):
     ubicacion = get_object_or_404(Ubicacion, id=id)
     if request.method == 'POST':
@@ -257,7 +278,7 @@ def editarUbicacion(request, id):
         ubicacion.descripcion = request.POST.get('descripcion')
         ubicacion.save()
         return redirect('listado_ubicaciones')
-    return render(request, 'ubicaciones/editar.html', {'ubicacion': ubicacion})
+    return render(request, 'ubicaciones/editarUbicacion.html', {'ubicacion': ubicacion})
 
 def editarOrganizador(request, id):
     organizador = get_object_or_404(Organizador, id=id)
@@ -270,7 +291,7 @@ def editarOrganizador(request, id):
         organizador.sitio_web = request.POST.get('sitio_web')
         organizador.save()
         return redirect('listado_organizadores')
-    return render(request, 'organizadores/editar.html', {'organizador': organizador})
+    return render(request, 'organizadores/editarOrganizador.html', {'organizador': organizador})
 
 def editarEvento(request, id):
     evento = get_object_or_404(Evento, id=id)
@@ -288,7 +309,7 @@ def editarEvento(request, id):
     artistas = Artista.objects.all()
     organizadores = Organizador.objects.all()
     ubicaciones = Ubicacion.objects.all()
-    return render(request, 'eventos/editar.html', {'evento': evento, 'artistas': artistas, 'organizadores': organizadores, 'ubicaciones': ubicaciones})
+    return render(request, 'eventos/editarEvento.html', {'evento': evento, 'artistas': artistas, 'organizadores': organizadores, 'ubicaciones': ubicaciones})
 
 def editarPublicacionEvento(request, id):
     publicacion = get_object_or_404(PublicacionEvento, id=id)
@@ -306,7 +327,7 @@ def editarPublicacionEvento(request, id):
     eventos = Evento.objects.all()
     ubicaciones = Ubicacion.objects.all()
     artistas = Artista.objects.all()
-    return render(request, 'publicaciones/editar.html', {'publicacion': publicacion, 'eventos': eventos, 'ubicaciones': ubicaciones, 'artistas': artistas})
+    return render(request, 'publicaciones/editarPublicacion.html', {'publicacion': publicacion, 'eventos': eventos, 'ubicaciones': ubicaciones, 'artistas': artistas})
 
 # <-------------Actualizar-------->
 def procesoActualizarArtista(request):
