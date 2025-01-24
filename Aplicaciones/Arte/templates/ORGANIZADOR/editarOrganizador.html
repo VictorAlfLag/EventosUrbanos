@@ -1,89 +1,90 @@
 {% extends "plantilla.html" %}
+
 {% block body %}
 
-<h1>EDITAR ORGANIZADOR</h1>
+<h1>EDIT ORGANIZER</h1>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'procesoActualizarOrganizador' %}" method="post" id="frm_organizador">
+            <form action="{% url 'update_organizer' id=organizer.id %}" method="post" id="frm_organizer">
                 {% csrf_token %}
-                <input type="hidden" name="id" value="{{ organizador.id }}">
-                
-                <label for="nombre"><b>Nombre del Organizador:</b></label>
-                <input type="text" name="nombre" class="form-control" value="{{ organizador.nombre }}" id="nombre" placeholder="Ingrese el nombre del organizador">
+                <input type="hidden" name="id" value="{{ organizer.id }}">
 
-                <label for="entidad"><b>Entidad:</b></label>
-                <input type="text" name="entidad" class="form-control" value="{{ organizador.entidad }}" id="entidad" placeholder="Ingrese la entidad del organizador">
+                <label for="name"><b>Organizer Name:</b></label>
+                <input type="text" name="name" class="form-control" value="{{ organizer.name }}" id="name" placeholder="Enter the organizer's name">
 
-                <label for="descripcion"><b>Descripción:</b></label>
-                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese una descripción del organizador">{{ organizador.descripcion }}</textarea>
+                <label for="entity"><b>Entity:</b></label>
+                <input type="text" name="entity" class="form-control" value="{{ organizer.entity }}" id="entity" placeholder="Enter the organizer's entity">
 
-                <label for="contacto"><b>Contacto:</b></label>
-                <input type="text" name="contacto" class="form-control" value="{{ organizador.contacto }}" id="contacto" placeholder="Ingrese el contacto del organizador">
+                <label for="description"><b>Description:</b></label>
+                <textarea name="description" class="form-control" id="description" placeholder="Enter a description of the organizer">{{ organizer.description }}</textarea>
 
-                <label for="email_contacto"><b>Correo de Contacto:</b></label>
-                <input type="email" name="email_contacto" class="form-control" value="{{ organizador.email_contacto }}" id="email_contacto" placeholder="Ingrese el correo de contacto">
+                <label for="contact"><b>Contact:</b></label>
+                <input type="text" name="contact" class="form-control" value="{{ organizer.contact }}" id="contact" placeholder="Enter the organizer's contact">
 
-                <label for="sitio_web"><b>Sitio Web:</b></label>
-                <input type="url" name="sitio_web" class="form-control" value="{{ organizador.sitio_web }}" id="sitio_web" placeholder="Ingrese el sitio web del organizador">
+                <label for="email_contact"><b>Contact Email:</b></label>
+                <input type="email" name="contact_email" class="form-control" value="{{ organizer.contact_email }}" id="contact_email" placeholder="Enter the contact email">
+
+                <label for="website"><b>Website:</b></label>
+                <input type="url" name="website" class="form-control" value="{{ organizer.website }}" id="website" placeholder="Enter the organizer's website">
 
                 <br>
-                <button type="submit" class="btn btn-warning">Actualizar</button>
+                <button type="submit" class="btn btn-warning">Update</button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="{% url 'listado_organizadores' %}">Cancelar</a>
+                <a href="{% url 'list_organizers' %}">Cancel</a>
             </form>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $('#frm_organizador').validate({
+    $('#frm_organizer').validate({
         rules: {
-            nombre: {
+            name: {
                 required: true,
                 minlength: 3,
                 maxlength: 255,
             },
-            entidad: {
+            entity: {
                 required: true,
                 minlength: 3,
             },
-            descripcion: {
+            description: {
                 required: true,
                 minlength: 10,
             },
-            contacto: {
+            contact: {
                 required: false,
             },
-            email_contacto: {
+            email_contact: {
                 required: true,
                 email: true,
             },
-            sitio_web: {
+            website: {
                 required: false,
                 url: true,
             },
         },
         messages: {
-            nombre: {
-                required: 'El nombre del organizador es obligatorio',
-                minlength: 'El nombre debe tener al menos 3 caracteres',
-                maxlength: 'El nombre debe tener menos de 255 caracteres',
+            name: {
+                required: 'The organizer name is required',
+                minlength: 'The name must be at least 3 characters long',
+                maxlength: 'The name must be less than 255 characters long',
             },
-            entidad: {
-                required: 'La entidad es obligatoria',
-                minlength: 'La entidad debe tener al menos 3 caracteres',
+            entity: {
+                required: 'The entity is required',
+                minlength: 'The entity must be at least 3 characters long',
             },
-            descripcion: {
-                required: 'La descripción es obligatoria',
-                minlength: 'La descripción debe tener al menos 10 caracteres',
+            description: {
+                required: 'The description is required',
+                minlength: 'The description must be at least 10 characters long',
             },
-            email_contacto: {
-                required: 'El correo electrónico es obligatorio',
-                email: 'Por favor, ingrese un correo electrónico válido',
+            email_contact: {
+                required: 'The email address is required',
+                email: 'Please enter a valid email address',
             },
-            sitio_web: {
-                url: 'Por favor, ingrese una URL válida',
+            website: {
+                url: 'Please enter a valid URL',
             },
         },
     });

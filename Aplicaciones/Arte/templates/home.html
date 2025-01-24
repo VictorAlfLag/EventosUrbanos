@@ -1,6 +1,112 @@
-{% extends './plantilla1.html' %}
-{% load static %}
-{% block body %}
+{% extends 'plantilla1.html' %}
 
-  
+{% block body %}
+<!-- Home Start -->
+<div class="container-fluid py-5">
+    <div class="container text-center">
+        <h1 class="display-4 mb-4">Welcome to Urban Events</h1>
+        <p class="lead mb-5">Discover the best concerts, urban art, festivals, and much more. Join our community and experience the most exciting events.</p>
+    </div>
+</div>
+<!-- Home End -->
+
+<!-- Mission and Vision Start -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <h2 class="h4 text-uppercase mb-3">Mission</h2>
+            <p>
+                Our mission is to create unique and vibrant spaces for urban culture, offering a platform for concerts, art, and festivals that connect the community, foster creativity, and celebrate diversity.
+            </p>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <h2 class="h4 text-uppercase mb-3">Vision</h2>
+            <p>
+                To be the leading platform for urban events, connecting artists, youth, and the public through unforgettable experiences, promoting local talent and culture in every corner of the city.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- Mission and Vision End -->
+
+<!-- Upcoming Events Start -->
+<div class="container-fluid features mb-5">
+    <div class="container py-5">
+        <h2 class="text-center text-uppercase mb-5">Upcoming Events</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-6 col-xl-3">
+                <div class="row g-4 align-items-center features-item">
+                    <div class="col-4">
+                        <div class="rounded-circle position-relative">
+                            <span class="rounded-circle border border-2 border-white bg-primary btn-sm-square text-white position-absolute" style="top: 10%; right: -10px;">3</span>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="features-content d-flex flex-column">
+                            <p class="text-uppercase mb-2">Concerts</p>
+                            <a href="#" class="h6">
+                                Enjoy the best urban concerts.
+                            </a>
+                            <small class="text-body d-block"><i class="fas fa-calendar-alt me-1"></i> January 20, 2025</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-3">
+                <div class="row g-4 align-items-center features-item">
+                    <div class="col-4">
+                        <div class="rounded-circle position-relative">
+                            <span class="rounded-circle border border-2 border-white bg-primary btn-sm-square text-white position-absolute" style="top: 10%; right: -10px;">3</span>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="features-content d-flex flex-column">
+                            <p class="text-uppercase mb-2">Urban Art</p>
+                            <a href="#" class="h6">
+                                Experience urban art at its fullest expression.
+                            </a>
+                            <small class="text-body d-block"><i class="fas fa-calendar-alt me-1"></i> January 25, 2025</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-3">
+                <div class="row g-4 align-items-center features-item">
+                    <div class="col-4">
+                        <div class="rounded-circle position-relative">
+                            <span class="rounded-circle border border-2 border-white bg-primary btn-sm-square text-white position-absolute" style="top: 10%; right: -10px;">3</span>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="features-content d-flex flex-column">
+                            <p class="text-uppercase mb-2">Dance</p>
+                            <a href="#" class="h6">
+                                Participate in the largest urban dance events.
+                            </a>
+                            <small class="text-body d-block"><i class="fas fa-calendar-alt me-1"></i> February 5, 2025</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-3">
+                <div class="row g-4 align-items-center features-item">
+                    <div class="col-4">
+                        <div class="rounded-circle position-relative">
+                            <span class="rounded-circle border border-2 border-white bg-primary btn-sm-square text-white position-absolute" style="top: 10%; right: -10px;">3</span>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="features-content d-flex flex-column">
+                            <p class="text-uppercase mb-2">Urban Festivals</p>
+                            <a href="#" class="h6">
+                                Experience urban festivals with the best music and art.
+                            </a>
+                            <small class="text-body d-block"><i class="fas fa-calendar-alt me-1"></i> March 10, 2025</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

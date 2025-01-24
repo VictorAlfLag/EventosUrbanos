@@ -1,544 +1,703 @@
-<<<<<<< HEAD
-from django.contrib import messages
-from django.shortcuts import get_object_or_404, render, redirect
-from Aplicaciones.Arte.forms import RegistroUsuarioForm
-from .models import Artista, Ubicacion, Organizador, Evento, PublicacionEvento
+from .models import Artist, Location, Organizer, Event, EventPublication, License, Audit
 from datetime import datetime
-from django.contrib.auth import authenticate, login
-=======
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm
-from .forms import RegistroUsuarioForm
 from django.shortcuts import get_object_or_404
-from datetime import datetime
->>>>>>> 8f99e044b8648af0827d61f17605141454ca18b1
+
 
 def home(request):
     return render(request, 'home.html')
 def home1(request):
     return render(request, 'home1.html')
-<<<<<<< HEAD
-# <----------Listado---------->
-def listadoArtistas(request):
-    artistas = Artista.objects.all()
-    return render(request, "artistas/listadoArtistas.html", {'listado_artistas': artistas})
+# <----------List---------->
+def list_artists(request):
+    artists = Artist.objects.all()
+    return render(request, "ARTISTA/listadoArtistas.html", {'artist_list': artists})
 
-def listadoUbicaciones(request):
-    ubicaciones = Ubicacion.objects.all()
-    return render(request, "ubicaciones/listadoUbicacion.html", {'listado_ubicaciones': ubicaciones})
+def list_locations(request):
+    locations = Location.objects.all()
+    return render(request, "UBICACION/listadoUbicacion.html", {'location_list': locations})
 
-def listadoOrganizadores(request):
-    organizadores = Organizador.objects.all()
-    return render(request, "organizadores/listadoOrganizador.html", {'listado_organizadores': organizadores})
+def list_organizers(request):
+    organizers = Organizer.objects.all()
+    return render(request, "ORGANIZADOR/listadoOrganizador.html", {'organizer_list': organizers})
 
-def listadoEventos(request):
-    eventos = Evento.objects.all()
-    return render(request, "eventos/listadoEventos.html", {'listado_eventos': eventos})
+def list_events(request):
+    events = Event.objects.select_related('artist', 'organizer', 'location').all()
+    return render(request, "EVENTO/listadoEventos.html", {'event_list': events})
 
-def listadoPublicacionesEventos(request):
-    publicaciones = PublicacionEvento.objects.all()
-    return render(request, "publicaciones/listadoPublicacion.html", {'listado_publicaciones': publicaciones})
-# <--------------Nuevo------------>
-
-def nuevoArtista(request):
+def list_event_publications(request):
+    publications = EventPublication.objects.all()
+    return render(request, "PUBLICACION/listadoPublicacion.html", {'publication_list': publications})
+def new_artist(request):
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        descripcion = request.POST.get('descripcion')
-        telefono = request.POST.get('telefono')
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        phone = request.POST.get('phone')
         email = request.POST.get('email')
-        redes_sociales = request.POST.get('redes_sociales')
-        sitio_web = request.POST.get('sitio_web')
+        social_media = request.POST.get('social_media')
+        website = request.POST.get('website')
 
-        artista = Artista.objects.create(
-            nombre=nombre,
-            descripcion=descripcion,
-            telefono=telefono,
+        artist = Artist.objects.create(
+            name=name,
+            description=description,
+            phone=phone,
             email=email,
-            redes_sociales=redes_sociales,
-            sitio_web=sitio_web
+            social_media=social_media,
+            website=website
         )
-        return redirect('listado_artistas')
-    return render(request, 'artistas/nuevoArtista.html')
+        return redirect('list_artists')
+    return render(request, 'ARTISTA/nuevoArtista.html')
 
 
-def nuevaUbicacion(request):
+def new_location(request):
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        direccion = request.POST.get('direccion')
-        descripcion = request.POST.get('descripcion')
+        name = request.POST.get('name')
+        address = request.POST.get('address')
+        description = request.POST.get('description')
 
-        ubicacion = Ubicacion.objects.create(
-            nombre=nombre,
-            direccion=direccion,
-            descripcion=descripcion
+        location = Location.objects.create(
+            name=name,
+            address=address,
+            description=description
         )
-        return redirect('listado_ubicaciones')
-    return render(request, 'ubicaciones/nuevaUbicacion.html')
+        return redirect('list_locations')
+    return render(request, 'UBICACION/nuevaUbicacion.html')
 
 
-def nuevoOrganizador(request):
+def new_organizer(request):
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        entidad = request.POST.get('entidad')
-        descripcion = request.POST.get('descripcion')
-        contacto = request.POST.get('contacto')
-        email_contacto = request.POST.get('email_contacto')
-        sitio_web = request.POST.get('sitio_web')
+        name = request.POST.get('name')
+        entity = request.POST.get('entity')
+        description = request.POST.get('description')
+        contact = request.POST.get('contact')
+        contact_email = request.POST.get('contact_email')
+        website = request.POST.get('website')
 
-        organizador = Organizador.objects.create(
-            nombre=nombre,
-            entidad=entidad,
-            descripcion=descripcion,
-            contacto=contacto,
-            email_contacto=email_contacto,
-            sitio_web=sitio_web
+        organizer = Organizer.objects.create(
+            name=name,
+            entity=entity,
+            description=description,
+            contact=contact,
+            contact_email=contact_email,
+            website=website
         )
-        return redirect('listado_organizadores')
-    return render(request, 'organizadores/nuevoOrganizador.html')
+        return redirect('list_organizers')
+    return render(request, 'ORGANIZADOR/nuevoOrganizador.html')
 
 
-def nuevoEvento(request):
+def new_event(request):
     if request.method == 'POST':
-        artista = get_object_or_404(Artista, id=request.POST.get('artista'))
-        organizador = get_object_or_404(Organizador, id=request.POST.get('organizador'))
-        ubicacion = get_object_or_404(Ubicacion, id=request.POST.get('ubicacion'))
-        titulo = request.POST.get('titulo')
-        descripcion = request.POST.get('descripcion')
-        fecha_inicio = request.POST.get('fecha_inicio')
-        fecha_fin = request.POST.get('fecha_fin')
-        estado = request.POST.get('estado')
-
-        evento = Evento.objects.create(
-            ARTISTA=artista,
-            ORGANIZADOR=organizador,
-            UBICACION=ubicacion,
-            titulo=titulo,
-            descripcion=descripcion,
-            fecha_inicio=fecha_inicio,
-            fecha_fin=fecha_fin,
-            estado=estado
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        status = request.POST.get('status')
+        artist_id = request.POST.get('artist')
+        organizer_id = request.POST.get('organizer')
+        location_id = request.POST.get('location')
+        artist = get_object_or_404(Artist, id=artist_id)
+        organizer = get_object_or_404(Organizer, id=organizer_id)
+        location = get_object_or_404(Location, id=location_id)
+        event = Event.objects.create(
+            ARTIST=artist,
+            ORGANIZER=organizer,
+            LOCATION=location,
+            title=title,
+            description=description,
+            start_date=start_date,
+            end_date=end_date,
+            status=status
         )
-        return redirect('listado_eventos')
-    return render(request, 'eventos/nuevoEvento.html')
-
-
-def nuevaPublicacionEvento(request):
-    if request.method == 'POST':
-        evento = get_object_or_404(Evento, id=request.POST.get('evento'))
-        hora_evento = request.POST.get('hora_evento')
-        contenido_publico = request.POST.get('contenido_publico')
-        imagen_evento = request.FILES.get('imagen_evento')
-        estado_publicacion = request.POST.get('estado_publicacion')
-        ubicacion_evento = get_object_or_404(Ubicacion, id=request.POST.get('ubicacion_evento'))
-
-        publicacion = PublicacionEvento.objects.create(
-            evento=evento,
-            hora_evento=hora_evento,
-            contenido_publico=contenido_publico,
-            imagen_evento=imagen_evento,
-            estado_publicacion=estado_publicacion,
-            ubicacion_evento=ubicacion_evento
-        )
-        publicacion.artistas_presentados.set(request.POST.getlist('artistas_presentados'))
-        return redirect('listado_publicaciones')
-    return render(request, 'publicaciones/nuevaPublicacion.html')
-
-# <--------------Guardar--------------->
-def guardarArtista(request):
-    if request.method == 'POST':
-        nombre = request.POST['nombre']
-        descripcion = request.POST['descripcion']
-        telefono = request.POST['telefono']
-        email = request.POST['email']
-        redes_sociales = request.POST['redes_sociales']
-        sitio_web = request.POST['sitio_web']
         
-        artista = Artista.objects.create(
-            nombre=nombre,
-            descripcion=descripcion,
-            telefono=telefono,
+        return redirect('list_events')
+    artists = Artist.objects.all()
+    organizers = Organizer.objects.all()
+    locations = Location.objects.all()
+    return render(request, 'EVENTO/nuevoEvento.html', {
+        'artists': artists,
+        'organizers': organizers,
+        'locations': locations,
+    })
+
+def new_event_publication(request):
+    if request.method == 'POST':
+        # Obtener el evento y la ubicación desde los datos del formulario
+        event = get_object_or_404(Event, id=request.POST.get('event'))
+        event_location = get_object_or_404(Location, id=request.POST.get('event_location'))
+
+        # Obtener los otros datos
+        event_time = request.POST.get('event_time')
+        public_content = request.POST.get('public_content')
+        event_image = request.FILES.get('event_image')
+        publication_status = request.POST.get('publication_status')
+
+        # Crear la publicación de evento con las claves foráneas
+        publication = EventPublication.objects.create(
+            event=event,
+            event_time=event_time,
+            public_content=public_content,
+            event_image=event_image,
+            publication_status=publication_status,
+            event_location=event_location
+        )
+
+        # Asignar los artistas seleccionados si los hay
+        selected_artists = request.POST.getlist('presented_artists')
+        if selected_artists:
+            artists = Artist.objects.filter(id__in=selected_artists)
+            publication.presented_artists.set(artists)  # Relaciona los artistas con la publicación
+
+        return redirect('list_event_publications')
+
+    # Si es una solicitud GET, obtenemos todos los objetos necesarios para renderizar el formulario
+    artists = Artist.objects.all()
+    locations = Location.objects.all()
+    events = Event.objects.all()
+
+    return render(request, 'PUBLICACION/nuevaPublicacion.html', {
+        'artists': artists,
+        'locations': locations,
+        'events': events,
+    })
+
+
+
+# <--------------Save--------------->
+def save_artist(request):
+    if request.method == 'POST':
+        # Cambiar los nombres de los campos para que coincidan con el HTML
+        name = request.POST.get('nombre')
+        description = request.POST.get('descripcion')
+        phone = request.POST.get('telefono')
+        email = request.POST.get('email')
+        social_media = request.POST.get('redes_sociales')
+        website = request.POST.get('sitio_web')
+        
+        # Crear el artista
+        artist = Artist.objects.create(
+            name=name,
+            description=description,
+            phone=phone,
             email=email,
-            redes_sociales=redes_sociales,
-            sitio_web=sitio_web
+            social_media=social_media,
+            website=website
         )
         
-        messages.success(request, "Artista registrado exitosamente.")
-        return redirect('listado_artistas')
-    return redirect('formulario_artista')
+        # Mensaje de éxito y redirección
+        messages.success(request, "Artist successfully registered.")
+        return redirect('list_artists')
+    
+    return redirect('artist_form')
 
-def guardarUbicacion(request):
+
+def save_location(request):
     if request.method == 'POST':
-        nombre = request.POST['nombre']
-        direccion = request.POST['direccion']
-        descripcion = request.POST['descripcion']
+        name = request.POST['name']
+        address = request.POST['address']
+        description = request.POST['description']
 
-        Ubicacion.objects.create(
-            nombre=nombre,
-            direccion=direccion,
-            descripcion=descripcion
+        Location.objects.create(
+            name=name,
+            address=address,
+            description=description
         )
 
-        messages.success(request, "Ubicación registrada exitosamente.")
-        return redirect('listado_ubicaciones')
-    return redirect('formulario_ubicacion')
+        messages.success(request, "Location successfully registered.")
+        return redirect('list_locations')
+    return redirect('location_form')
 
-def guardarOrganizador(request):
+def save_organizer(request):
     if request.method == 'POST':
-        nombre = request.POST['nombre']
-        entidad = request.POST['entidad']
-        descripcion = request.POST['descripcion']
-        contacto = request.POST.get('contacto', '')
-        email_contacto = request.POST.get('email_contacto', '')
-        sitio_web = request.POST.get('sitio_web', '')
+        name = request.POST['name']
+        entity = request.POST['entity']
+        description = request.POST['description']
+        contact = request.POST.get('contact', '')
+        contact_email = request.POST.get('contact_email', '')
+        website = request.POST.get('website', '')
 
-        Organizador.objects.create(
-            nombre=nombre,
-            entidad=entidad,
-            descripcion=descripcion,
-            contacto=contacto,
-            email_contacto=email_contacto,
-            sitio_web=sitio_web
+        Organizer.objects.create(
+            name=name,
+            entity=entity,
+            description=description,
+            contact=contact,
+            contact_email=contact_email,
+            website=website
         )
 
-        messages.success(request, "Organizador registrado exitosamente.")
-        return redirect('listado_organizadores')
-    return redirect('formulario_organizador')
+        messages.success(request, "Organizer successfully registered.")
+        return redirect('list_organizers')
+    return redirect('organizer_form')
 
-def guardarEvento(request):
+def save_event(request):
     if request.method == 'POST':
-        artista_id = request.POST['artista']
-        organizador_id = request.POST['organizador']
-        ubicacion_id = request.POST['ubicacion']
-        titulo = request.POST['titulo']
-        descripcion = request.POST['descripcion']
-        fecha_inicio = request.POST['fecha_inicio']
-        fecha_fin = request.POST['fecha_fin']
-        estado = request.POST.get('estado', 'activo')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        status = request.POST.get('status')
+        artist_id = request.POST.get('artist')
+        organizer_id = request.POST.get('organizer')
+        location_id = request.POST.get('location')
 
-        artista = get_object_or_404(Artista, id=artista_id)
-        organizador = get_object_or_404(Organizador, id=organizador_id)
-        ubicacion = get_object_or_404(Ubicacion, id=ubicacion_id)
+        # Obtener los objetos relacionados utilizando get_object_or_404
+        artist = get_object_or_404(Artist, id=artist_id)
+        organizer = get_object_or_404(Organizer, id=organizer_id)
+        location = get_object_or_404(Location, id=location_id)
 
-        Evento.objects.create(
-            artista=artista,
-            organizador=organizador,
-            ubicacion=ubicacion,
-            titulo=titulo,
-            descripcion=descripcion,
-            fecha_inicio=fecha_inicio,
-            fecha_fin=fecha_fin,
-            estado=estado
+        # Crear el evento utilizando los nombres de los campos en minúsculas
+        event = Event.objects.create(
+            artist=artist,  # Usar 'artist' en minúsculas
+            organizer=organizer,  # Usar 'organizer' en minúsculas
+            location=location,  # Usar 'location' en minúsculas
+            title=title,
+            description=description,
+            start_date=start_date,
+            end_date=end_date,
+            status=status
         )
 
-        messages.success(request, "Evento registrado exitosamente.")
-        return redirect('listado_eventos')
-    return redirect('formulario_evento')
+        return redirect('list_events')
 
-def guardarPublicacionEvento(request):
+    artists = Artist.objects.all()
+    organizers = Organizer.objects.all()
+    locations = Location.objects.all()
+
+    return render(request, 'EVENTO/nuevoEvento.html', {
+        'artists': artists,
+        'organizers': organizers,
+        'locations': locations
+    })
+
+
+def save_event_publication(request):
     if request.method == 'POST':
-        evento_id = request.POST['evento']
-        contenido_publico = request.POST['contenido_publico']
-        hora_evento = request.POST['hora_evento']
-        estado_publicacion = request.POST.get('estado_publicacion', 'activo')
-        artistas_presentados_ids = request.POST.getlist('artistas_presentados')
-        ubicacion_id = request.POST['ubicacion_evento']
-        imagen_evento = request.FILES.get('imagen_evento', None)
+        event_id = request.POST['event']
+        public_content = request.POST['public_content']
+        event_time = request.POST['event_time']
+        publication_status = request.POST.get('publication_status', 'active')
+        presented_artists_ids = request.POST.getlist('presented_artists')
+        location_id = request.POST['event_location']
+        event_image = request.FILES.get('event_image', None)
 
-        evento = get_object_or_404(Evento, id=evento_id)
-        ubicacion = get_object_or_404(Ubicacion, id=ubicacion_id)
+        event = get_object_or_404(Event, id=event_id)
+        location = get_object_or_404(Location, id=location_id)
 
-        publicacion = PublicacionEvento.objects.create(
-            evento=evento,
-            contenido_publico=contenido_publico,
-            hora_evento=hora_evento,
-            estado_publicacion=estado_publicacion,
-            ubicacion_evento=ubicacion,
-            imagen_evento=imagen_evento
+        publication = EventPublication.objects.create(
+            event=event,
+            public_content=public_content,
+            event_time=event_time,
+            publication_status=publication_status,
+            event_location=location,
+            event_image=event_image
         )
 
-        publicacion.artistas_presentados.set(artistas_presentados_ids)
+        publication.presented_artists.set(presented_artists_ids)
 
-        messages.success(request, "Publicación de evento registrada exitosamente.")
-        return redirect('listado_publicaciones')
-    return redirect('formulario_publicacion_evento')
+        messages.success(request, "Event publication successfully registered.")
+        return redirect('list_event_publications')
+    return redirect('event_publication_form')
 
-# <----------Editar---------->
-def editarArtista(request, id):
-    artista = get_object_or_404(Artista, id=id)
+# <----------Edit---------->
+def edit_artist(request, id):
+    artist = get_object_or_404(Artist, id=id)
     
     if request.method == 'POST':
-        artista.nombre = request.POST.get('nombre')
-        artista.descripcion = request.POST.get('descripcion')
-        artista.telefono = request.POST.get('telefono')
-        artista.email = request.POST.get('email')
-        artista.redes_sociales = request.POST.get('redes_sociales')
-        artista.sitio_web = request.POST.get('sitio_web')
+        artist.name = request.POST.get('name')
+        artist.description = request.POST.get('description')
+        artist.phone = request.POST.get('phone')
+        artist.email = request.POST.get('email')
+        artist.social_media = request.POST.get('social_media')
+        artist.website = request.POST.get('website')
         
-        artista.save()
-        return redirect('listado_artistas')
+        artist.save()
+        return redirect('list_artists')
     
-    return render(request, 'artistas/editarArtista.html', {'artista': artista})
+    return render(request, 'ARTISTA/editarArtista.html', {'artist': artist})
 
-def editarUbicacion(request, id):
-    ubicacion = get_object_or_404(Ubicacion, id=id)
+def edit_location(request, id):
+    location = get_object_or_404(Location, id=id)
     if request.method == 'POST':
-        ubicacion.nombre = request.POST.get('nombre')
-        ubicacion.direccion = request.POST.get('direccion')
-        ubicacion.descripcion = request.POST.get('descripcion')
-        ubicacion.save()
-        return redirect('listado_ubicaciones')
-    return render(request, 'ubicaciones/editarUbicacion.html', {'ubicacion': ubicacion})
+        location.name = request.POST.get('name')
+        location.address = request.POST.get('address')
+        location.description = request.POST.get('description')
+        location.save()
+        return redirect('list_locations')
+    return render(request, 'Ubicacion/editarUbicacion.html', {'location': location})
 
-def editarOrganizador(request, id):
-    organizador = get_object_or_404(Organizador, id=id)
+def edit_organizer(request, id):
+    organizer = get_object_or_404(Organizer, id=id)
     if request.method == 'POST':
-        organizador.nombre = request.POST.get('nombre')
-        organizador.entidad = request.POST.get('entidad')
-        organizador.descripcion = request.POST.get('descripcion')
-        organizador.contacto = request.POST.get('contacto')
-        organizador.email_contacto = request.POST.get('email_contacto')
-        organizador.sitio_web = request.POST.get('sitio_web')
-        organizador.save()
-        return redirect('listado_organizadores')
-    return render(request, 'organizadores/editarOrganizador.html', {'organizador': organizador})
+        organizer.name = request.POST.get('name')
+        organizer.entity = request.POST.get('entity')
+        organizer.description = request.POST.get('description')
+        organizer.contact = request.POST.get('contact')
+        organizer.contact_email = request.POST.get('contact_email')
+        organizer.website = request.POST.get('website')
+        organizer.save()
+        return redirect('list_organizers')
+    return render(request, 'ORGANIZADOR/editarOrganizador.html', {'organizer': organizer})
 
-def editarEvento(request, id):
-    evento = get_object_or_404(Evento, id=id)
+def edit_event(request, id):
+    event = get_object_or_404(Event, id=id)
+
     if request.method == 'POST':
-        evento.titulo = request.POST.get('titulo')
-        evento.descripcion = request.POST.get('descripcion')
-        evento.fecha_inicio = request.POST.get('fecha_inicio')
-        evento.fecha_fin = request.POST.get('fecha_fin')
-        evento.estado = request.POST.get('estado')
-        evento.ARTISTA_id = request.POST.get('artista')
-        evento.ORGANIZADOR_id = request.POST.get('organizador')
-        evento.UBICACION_id = request.POST.get('ubicacion')
-        evento.save()
-        return redirect('listado_eventos')
-    artistas = Artista.objects.all()
-    organizadores = Organizador.objects.all()
-    ubicaciones = Ubicacion.objects.all()
-    return render(request, 'eventos/editarEvento.html', {'evento': evento, 'artistas': artistas, 'organizadores': organizadores, 'ubicaciones': ubicaciones})
+        # Obtener los datos del formulario
+        event.title = request.POST.get('title')
+        event.description = request.POST.get('description')
+        event.start_date = request.POST.get('start_date')
+        event.end_date = request.POST.get('end_date')
+        event.status = request.POST.get('status')
+        
+        # Asignar las claves foráneas correctamente
+        artist_id = request.POST.get('artist')
+        organizer_id = request.POST.get('organizer')
+        location_id = request.POST.get('location')
+        
+        # Verificar si los IDs no son nulos y asignar las instancias correspondientes
+        if artist_id:
+            event.ARTIST = Artist.objects.get(id=artist_id)
+        if organizer_id:
+            event.ORGANIZER = Organizer.objects.get(id=organizer_id)
+        if location_id:
+            event.LOCATION = Location.objects.get(id=location_id)
+        
+        # Guardar el evento actualizado
+        event.save()
+        
+        return redirect('list_events')
 
-def editarPublicacionEvento(request, id):
-    publicacion = get_object_or_404(PublicacionEvento, id=id)
-    if request.method == 'POST':
-        publicacion.contenido_publico = request.POST.get('contenido_publico')
-        publicacion.estado_publicacion = request.POST.get('estado_publicacion')
-        publicacion.hora_evento = request.POST.get('hora_evento')
-        publicacion.imagen_evento = request.FILES.get('imagen_evento') if 'imagen_evento' in request.FILES else publicacion.imagen_evento
-        publicacion.evento_id = request.POST.get('evento')
-        publicacion.ubicacion_evento_id = request.POST.get('ubicacion_evento')
-        publicacion.save()
-        artistas = request.POST.getlist('artistas_presentados')
-        publicacion.artistas_presentados.set(artistas)
-        return redirect('listado_publicaciones')
-    eventos = Evento.objects.all()
-    ubicaciones = Ubicacion.objects.all()
-    artistas = Artista.objects.all()
-    return render(request, 'publicaciones/editarPublicacion.html', {'publicacion': publicacion, 'eventos': eventos, 'ubicaciones': ubicaciones, 'artistas': artistas})
-
-# <-------------Actualizar-------->
-def procesoActualizarArtista(request):
-    id_artista = request.POST.get('id')
-    if not id_artista:
-        messages.error(request, "El ID del artista no fue enviado correctamente.")
-        return redirect('listado_artistas')
+    # Obtener todos los objetos de los modelos relacionados
+    artists = Artist.objects.all()
+    organizers = Organizer.objects.all()
+    locations = Location.objects.all()
     
-    nombre = request.POST.get('nombre')
-    descripcion = request.POST.get('descripcion')
-    telefono = request.POST.get('telefono')
-    email = request.POST.get('email')
-    redes_sociales = request.POST.get('redes_sociales')
-    sitio_web = request.POST.get('sitio_web')
-    
-    try:
-        artista = Artista.objects.get(id=id_artista)
-    except Artista.DoesNotExist:
-        messages.error(request, "Artista no encontrado.")
-        return redirect('listado_artistas')
-    
-    artista.nombre = nombre
-    artista.descripcion = descripcion
-    artista.telefono = telefono
-    artista.email = email
-    artista.redes_sociales = redes_sociales
-    artista.sitio_web = sitio_web
-    artista.save()
-    
-    messages.success(request, "Artista actualizado correctamente.")
-    return redirect('listado_artistas')
+    return render(request, 'EVENTO/editarEvento.html', {'event': event, 'artists': artists, 'organizers': organizers, 'locations': locations})
 
-def procesoActualizarUbicacion(request):
-    id_ubicacion = request.POST.get('id')
-    if not id_ubicacion:
-        messages.error(request, "El ID de la ubicación no fue enviado correctamente.")
-        return redirect('listado_ubicaciones')
-
-    nombre = request.POST.get('nombre')
-    direccion = request.POST.get('direccion')
-    descripcion = request.POST.get('descripcion')
-
-    try:
-        ubicacion = Ubicacion.objects.get(id=id_ubicacion)
-    except Ubicacion.DoesNotExist:
-        messages.error(request, "Ubicación no encontrada.")
-        return redirect('listado_ubicaciones')
-
-    ubicacion.nombre = nombre
-    ubicacion.direccion = direccion
-    ubicacion.descripcion = descripcion
-    ubicacion.save()
-
-    messages.success(request, "Ubicación actualizada correctamente.")
-    return redirect('listado_ubicaciones')
-
-def procesoActualizarOrganizador(request):
-    id_organizador = request.POST.get('id')
-    if not id_organizador:
-        messages.error(request, "El ID del organizador no fue enviado correctamente.")
-        return redirect('listado_organizadores')
-
-    nombre = request.POST.get('nombre')
-    entidad = request.POST.get('entidad')
-    descripcion = request.POST.get('descripcion')
-    contacto = request.POST.get('contacto')
-    email_contacto = request.POST.get('email_contacto')
-    sitio_web = request.POST.get('sitio_web')
-
-    try:
-        organizador = Organizador.objects.get(id=id_organizador)
-    except Organizador.DoesNotExist:
-        messages.error(request, "Organizador no encontrado.")
-        return redirect('listado_organizadores')
-
-    organizador.nombre = nombre
-    organizador.entidad = entidad
-    organizador.descripcion = descripcion
-    organizador.contacto = contacto
-    organizador.email_contacto = email_contacto
-    organizador.sitio_web = sitio_web
-    organizador.save()
-
-    messages.success(request, "Organizador actualizado correctamente.")
-    return redirect('listado_organizadores')
-
-def procesoActualizarEvento(request):
-    id_evento = request.POST.get('id')
-    if not id_evento:
-        messages.error(request, "El ID del evento no fue enviado correctamente.")
-        return redirect('listado_eventos')
-
-    titulo = request.POST.get('titulo')
-    descripcion = request.POST.get('descripcion')
-    fecha_inicio = request.POST.get('fecha_inicio')
-    fecha_fin = request.POST.get('fecha_fin')
-    estado = request.POST.get('estado')
-
-    try:
-        evento = Evento.objects.get(id=id_evento)
-    except Evento.DoesNotExist:
-        messages.error(request, "Evento no encontrado.")
-        return redirect('listado_eventos')
-
-    evento.titulo = titulo
-    evento.descripcion = descripcion
-    evento.fecha_inicio = fecha_inicio
-    evento.fecha_fin = fecha_fin
-    evento.estado = estado
-    evento.save()
-
-    messages.success(request, "Evento actualizado correctamente.")
-    return redirect('listado_eventos')
-
-
-def procesoActualizarPublicacionEvento(request):
-    id_publicacion = request.POST.get('id')
-    if not id_publicacion:
-        messages.error(request, "El ID de la publicación no fue enviado correctamente.")
-        return redirect('listado_publicaciones_eventos')
-
-    contenido_publico = request.POST.get('contenido_publico')
-    estado_publicacion = request.POST.get('estado_publicacion')
-
-    try:
-        publicacion = PublicacionEvento.objects.get(id=id_publicacion)
-    except PublicacionEvento.DoesNotExist:
-        messages.error(request, "Publicación no encontrada.")
-        return redirect('listado_publicaciones_eventos')
-
-    publicacion.contenido_publico = contenido_publico
-    publicacion.estado_publicacion = estado_publicacion
-    publicacion.save()
-    messages.success(request, "Publicación actualizada correctamente.")
-    return redirect('listado_publicaciones_eventos')
-
-# <-------------Eliminar-------->
-def eliminarArtista(request, id):
-    artista = get_object_or_404(Artista, id=id)
-    artista.delete()
-    messages.success(request, "Artista eliminado exitosamente.")
-    return redirect('listado_artistas')
-
-def eliminarUbicacion(request, id):
-    ubicacion = get_object_or_404(Ubicacion, id=id)
-    ubicacion.delete()
-    messages.success(request, "Ubicación eliminada exitosamente.")
-    return redirect('listado_ubicaciones')
-
-def eliminarOrganizador(request, id):
-    organizador = get_object_or_404(Organizador, id=id)
-    organizador.delete()
-    messages.success(request, "Organizador eliminado exitosamente.")
-    return redirect('listado_organizadores')
-
-def eliminarEvento(request, id):
-    evento = get_object_or_404(Evento, id=id)
-    evento.delete()
-    messages.success(request, "Evento eliminado exitosamente.")
-    return redirect('listado_eventos')
-
-def eliminarPublicacionEvento(request, id):
-    publicacion_evento = get_object_or_404(PublicacionEvento, id=id)
-    publicacion_evento.delete()
-    messages.success(request, "Publicación de evento eliminada exitosamente.")
-    return redirect('listado_publicaciones')
-# <-------------Login-------->
-=======
-
->>>>>>> 8f99e044b8648af0827d61f17605141454ca18b1
-def registro_usuario(request):
+def edit_event_publication(request, id):
+    publication = get_object_or_404(EventPublication, id=id)
     if request.method == 'POST':
-        form = RegistroUsuarioForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            messages.success(request, "¡Usuario creado exitosamente!")
-            return redirect('home1') 
-        else:
-            messages.error(request, "Por favor corrige los errores del formulario.")
-            return render(request, 'Login/registro.html', {'form': form})
-    else:
-        form = RegistroUsuarioForm()
-    return render(request, 'Login/registro.html', {'form': form})
+        publication.public_content = request.POST.get('public_content')
+        publication.publication_status = request.POST.get('publication_status')
+        publication.event_time = request.POST.get('event_time')
+        publication.event_image = request.FILES.get('event_image') if 'event_image' in request.FILES else publication.event_image
+        publication.event_id = request.POST.get('event')
+        publication.event_location_id = request.POST.get('event_location')
+        publication.save()
+        artists = request.POST.getlist('presented_artists')
+        publication.presented_artists.set(artists)
+        return redirect('list_event_publications')
+    events = Event.objects.all()
+    locations = Location.objects.all()
+    artists = Artist.objects.all()
+    return render(request, 'PUBLICACION/editarPublicacion.html', {'publication': publication, 'events': events, 'locations': locations, 'artists': artists})
 
-def login_view(request):
+# <-------------Update-------->
+def update_artist(request, id):
+    # Obtener el artista usando el id desde la URL
+    try:
+        artist = Artist.objects.get(id=id)
+    except Artist.DoesNotExist:
+        messages.error(request, "Artist not found.")
+        return redirect('list_artists')
+    
     if request.method == 'POST':
-        print(request.POST)  
-        if 'usuario' in request.POST and 'clave' in request.POST:
-            username = request.POST['usuario']
-            password = request.POST['clave']
-            
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('home1')
-            else:
-                messages.error(request, 'Usuario o contraseña incorrectos.')
-        else:
-            messages.error(request, 'Campos de usuario o contraseña faltantes.')
-    return render(request, 'login/login.html')
+        # Obtener los nuevos datos del formulario
+        artist.name = request.POST.get('name')
+        artist.description = request.POST.get('description')
+        artist.phone = request.POST.get('phone')
+        artist.email = request.POST.get('email')
+        artist.social_media = request.POST.get('social_media')
+        artist.website = request.POST.get('website')
+        
+        artist.save()
+        messages.success(request, "Artist successfully updated.")
+        return redirect('list_artists')
 
+    # Si es GET, mostrar el formulario con los datos actuales del artista
+    return render(request, 'ARTISTA/editarArtista.html', {'artist': artist})
+
+def update_location(request, id):
+    # Obtener la ubicación usando el id desde la URL
+    try:
+        location = Location.objects.get(id=id)
+    except Location.DoesNotExist:
+        messages.error(request, "Location not found.")
+        return redirect('list_locations')
+    
+    if request.method == 'POST':
+        # Actualizar los campos de la ubicación
+        location.name = request.POST.get('name')
+        location.address = request.POST.get('address')
+        location.description = request.POST.get('description')
+        
+        location.save()
+        messages.success(request, "Location successfully updated.")
+        return redirect('list_locations')
+    
+    # Mostrar el formulario con los datos actuales de la ubicación
+    return render(request, 'Ubicacion/editarUbicacion.html', {'location': location})
+
+def update_organizer(request, id):
+    # Obtener el organizador usando el id desde la URL
+    try:
+        organizer = Organizer.objects.get(id=id)
+    except Organizer.DoesNotExist:
+        messages.error(request, "Organizer not found.")
+        return redirect('list_organizers')
+    
+    if request.method == 'POST':
+        # Actualizar los campos del organizador
+        organizer.name = request.POST.get('name')
+        organizer.entity = request.POST.get('entity')
+        organizer.description = request.POST.get('description')
+        organizer.contact = request.POST.get('contact')
+        organizer.contact_email = request.POST.get('contact_email')
+        organizer.website = request.POST.get('website')
+        
+        organizer.save()
+        messages.success(request, "Organizer successfully updated.")
+        return redirect('list_organizers')
+    
+    # Mostrar el formulario con los datos actuales del organizador
+    return render(request, 'ORGANIZADOR/editarOrganizador.html', {'organizer': organizer})
+
+
+def update_event(request, id):
+    # Obtener el evento usando el id desde la URL
+    try:
+        event = Event.objects.get(id=id)
+    except Event.DoesNotExist:
+        messages.error(request, "Event not found.")
+        return redirect('list_events')
+
+    if request.method == 'POST':
+        # Actualizar los campos del evento
+        event.title = request.POST.get('title')
+        event.description = request.POST.get('description')
+        event.start_date = request.POST.get('start_date')
+        event.end_date = request.POST.get('end_date')
+        event.status = request.POST.get('status')
+        event.ARTIST_id = request.POST.get('artist')
+        event.ORGANIZER_id = request.POST.get('organizer')
+        event.LOCATION_id = request.POST.get('location')
+        
+        event.save()
+        messages.success(request, "Event successfully updated.")
+        return redirect('list_events')
+
+    # Obtener los datos necesarios para los selectores en el formulario
+    artists = Artist.objects.all()
+    organizers = Organizer.objects.all()
+    locations = Location.objects.all()
+
+    return render(request, 'EVENTO/editarEvento.html', {'event': event, 'artists': artists, 'organizers': organizers, 'locations': locations})
+
+
+def delete_artist(request, id):
+    artist = get_object_or_404(Artist, id=id)
+    artist.delete()
+    messages.success(request, "Artist successfully deleted.")
+    return redirect('list_artists')
+
+def delete_location(request, id):
+    location = get_object_or_404(Location, id=id)
+    location.delete()
+    messages.success(request, "Location successfully deleted.")
+    return redirect('list_locations')
+
+def delete_organizer(request, id):
+    organizer = get_object_or_404(Organizer, id=id)
+    organizer.delete()
+    messages.success(request, "Organizer successfully deleted.")
+    return redirect('list_organizers')
+
+def delete_event(request, id):
+    event = get_object_or_404(Event, id=id)
+    event.delete()
+    messages.success(request, "Event successfully deleted.")
+    return redirect('list_events')
+
+def delete_event_publication(request, id):
+    event_publication = get_object_or_404(EventPublication, id=id)
+    event_publication.delete()
+    messages.success(request, "Event publication successfully deleted.")
+    return redirect('list_event_publications')
+
+# Listar todas las licencias
+def list_licenses(request):
+    licenses = License.objects.all()
+    return render(request, "LICENCIA/listadoLicencias.html", {'license_list': licenses})
+
+# Crear una nueva licencia
+def new_license(request):
+    if request.method == 'POST':
+        type = request.POST.get('type')
+        cost = request.POST.get('cost')
+        initials = request.POST.get('initials')
+        status = request.POST.get('status')
+
+        license = License.objects.create(
+            type=type,
+            cost=cost,
+            initials=initials,
+            status=status
+        )
+        return redirect('list_licenses')
+    return render(request, 'LICENCIA/nuevaLicencia.html')
+
+# Guardar una licencia (similar a 'save_artist' para los artistas)
+def save_license(request):
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        type = request.POST.get('type')
+        cost = request.POST.get('cost')
+        initials = request.POST.get('initials')
+        status = request.POST.get('status')
+        
+        # Crear la licencia
+        license = License.objects.create(
+            type=type,
+            cost=cost,
+            initials=initials,
+            status=status
+        )
+        
+        # Mensaje de éxito y redirección
+        messages.success(request, "License successfully registered.")
+        return redirect('list_licenses')
+    
+    return redirect('license_form')
+
+# Editar una licencia
+def edit_license(request, id):
+    license = get_object_or_404(License, id=id)
+    
+    if request.method == 'POST':
+        license.type = request.POST.get('type')
+        license.cost = request.POST.get('cost')
+        license.initials = request.POST.get('initials')
+        license.status = request.POST.get('status')
+        
+        license.save()
+        return redirect('list_licenses')
+    
+    return render(request, 'LICENCIA/editarLicencia.html', {'license': license})
+
+# Actualizar una licencia
+def update_license(request, id):
+    # Obtener la licencia usando el id
+    try:
+        license = License.objects.get(id=id)
+    except License.DoesNotExist:
+        messages.error(request, "License not found.")
+        return redirect('list_licenses')
+    
+    if request.method == 'POST':
+        # Obtener los nuevos datos del formulario
+        license.type = request.POST.get('type')
+        license.cost = request.POST.get('cost')
+        license.initials = request.POST.get('initials')
+        license.status = request.POST.get('status')
+        
+        license.save()
+        messages.success(request, "License successfully updated.")
+        return redirect('list_licenses')
+
+    return render(request, 'LICENCIA/editarLicencia.html', {'license': license})
+
+# Eliminar una licencia
+def delete_license(request, id):
+    license = get_object_or_404(License, id=id)
+    license.delete()
+    messages.success(request, "License successfully deleted.")
+    return redirect('list_licenses')
+
+# Listar todas las auditorías
+def list_audits(request):
+    audits = Audit.objects.all()
+    return render(request, "AUDITORIA/listadoAuditorias.html", {'audit_list': audits})
+
+# Crear una nueva auditoría
+def new_audit(request):
+    if request.method == 'POST':
+        date = request.POST.get('date')
+        description = request.POST.get('description')
+        user = request.POST.get('user')
+        gender = request.POST.get('gender')
+
+        audit = Audit.objects.create(
+            date=date,
+            description=description,
+            user=user,
+            gender=gender
+        )
+        return redirect('list_audits')
+    return render(request, 'AUDITORIA/nuevaAuditoria.html')
+
+# Guardar una auditoría (similar a 'save_artist' para los artistas)
+def save_audit(request):
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        date = request.POST.get('date')
+        description = request.POST.get('description')
+        user = request.POST.get('user')
+        gender = request.POST.get('gender')
+        
+        # Crear la auditoría
+        audit = Audit.objects.create(
+            date=date,
+            description=description,
+            user=user,
+            gender=gender
+        )
+        
+        # Mensaje de éxito y redirección
+        messages.success(request, "Audit successfully registered.")
+        return redirect('list_audits')
+    
+    return redirect('audit_form')
+
+# Editar una auditoría
+def edit_audit(request, id):
+    audit = get_object_or_404(Audit, id=id)
+    
+    if request.method == 'POST':
+        audit.date = request.POST.get('date')
+        audit.description = request.POST.get('description')
+        audit.user = request.POST.get('user')
+        audit.gender = request.POST.get('gender')
+        
+        audit.save()
+        return redirect('list_audits')
+    
+    return render(request, 'AUDITORIA/editarAuditoria.html', {'audit': audit})
+
+# Actualizar una auditoría
+def update_audit(request, id):
+    # Obtener la auditoría usando el id
+    try:
+        audit = Audit.objects.get(id=id)
+    except Audit.DoesNotExist:
+        messages.error(request, "Audit not found.")
+        return redirect('list_audits')
+    
+    if request.method == 'POST':
+        # Obtener los nuevos datos del formulario
+        audit.date = request.POST.get('date')
+        audit.description = request.POST.get('description')
+        audit.user = request.POST.get('user')
+        audit.gender = request.POST.get('gender')
+        
+        audit.save()
+        messages.success(request, "Audit successfully updated.")
+        return redirect('list_audits')
+
+    return render(request, 'AUDITORIA/editarAuditoria.html', {'audit': audit})
+
+# Eliminar una auditoría
+def delete_audit(request, id):
+    audit = get_object_or_404(Audit, id=id)
+    audit.delete()
+    messages.success(request, "Audit successfully deleted.")
+    return redirect('list_audits')

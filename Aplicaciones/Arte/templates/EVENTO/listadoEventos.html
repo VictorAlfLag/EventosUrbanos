@@ -1,6 +1,6 @@
 {% extends "plantilla.html" %}
-{% block body %}
 
+{% block body %}
 <style>
     .table-bordered > :not(caption) > * > * {
         border-width: 0 var(--bs-border-width);
@@ -11,42 +11,43 @@
 <br>
 <div class="card">
     <div class="card-title text-center">
-        <h3><b>Listado de Eventos</b></h3>
+        <h3><b>Event List</b></h3>
     </div>
 </div>  
 <br>
 <div style="text-align: center;">
-    <a href="{% url 'nuevoEvento' %}" class="btn btn-success">Agregar Evento</a>
-    <button class="btn btn-primary" onclick="printTable()">Imprimir Reporte</button>
+    <a href="{% url 'new_event' %}" class="btn btn-success">Add Event</a>
+    <button class="btn btn-primary" onclick="printTable()">Print Report</button>
 </div>
-<table class="table table-bordered table-striped table-hover text-center" id="tbl-eventos"> 
+
+<table class="table table-bordered table-striped table-hover text-center" id="tbl-events"> 
     <thead>
         <tr>
-            <th>Id del Evento</th>
-            <th>Título</th>
-            <th>Artista</th>
-            <th>Organizador</th>
-            <th>Ubicación</th>
-            <th>Fecha Inicio</th>
-            <th>Fecha Fin</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th>Event ID</th>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Organizer</th>
+            <th>Location</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        {% for evento in listado_eventos %}
+        {% for events in event_list %}
         <tr>
-            <td>{{ evento.id }}</td>
-            <td>{{ evento.titulo }}</td>
-            <td>{{ evento.artista.nombre }}</td>
-            <td>{{ evento.organizador.nombre }}</td>
-            <td>{{ evento.ubicacion.nombre }}</td>
-            <td>{{ evento.fecha_inicio }}</td>
-            <td>{{ evento.fecha_fin }}</td>
-            <td>{{ evento.estado }}</td>
+            <td>{{ events.id }}</td>
+            <td>{{ events.title }}</td>
+            <td>{{ events.artist.name }}</td>
+            <td>{{ events.organizer.name }}</td>
+            <td>{{ events.location.name }}</td>
+            <td>{{ events.start_date }}</td>
+            <td>{{ events.end_date }}</td>
+            <td>{{ events.status }}</td>
             <td>
-                <a href="{% url 'editarEvento' evento.id %}" class="btn btn-warning">Editar</a>
-                <a href="{% url 'eliminarEvento' evento.id %}" onclick="return confirm('¿Estás seguro de eliminar?')" class="btn btn-danger">Eliminar</a>
+                <a href="{% url 'edit_event' events.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'delete_event' events.id %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a>
             </td>
         </tr>
         {% endfor %}
@@ -55,11 +56,11 @@
 
 <script>
     $(document).ready(function() {
-        $('#tbl-eventos').DataTable();
+        $('#tbl-events').DataTable();
     });
 
     function printTable() {
-        var printContents = document.getElementById('tbl-eventos').outerHTML;
+        var printContents = document.getElementById('tbl-events').outerHTML;
         var originalContents = document.body.innerHTML;
         document.body.innerHTML = printContents;
         window.print();

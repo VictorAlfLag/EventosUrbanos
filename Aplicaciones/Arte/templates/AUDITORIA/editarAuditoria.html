@@ -1,0 +1,73 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<h1>EDIT AUDIT</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'update_audit' id=audit.id %}" method="post" enctype="multipart/form-data" id="frm_audit">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ audit.id }}">
+
+                <label for="date"><b>Date:</b></label>
+                <input type="datetime-local" name="date" class="form-control" value="{{ audit.date|date:'Y-m-d\TH:i' }}" id="date">
+
+                <label for="description"><b>Description:</b></label>
+                <textarea name="description" class="form-control" id="description" placeholder="Enter a description of the audit">{{ audit.description }}</textarea>
+
+                <label for="user"><b>User:</b></label>
+                <input type="text" name="user" class="form-control" value="{{ audit.user }}" id="user" placeholder="Enter the user who conducted the audit">
+
+                <label for="gender"><b>Gender:</b></label>
+                <select name="gender" class="form-control" id="gender">
+                    <option value="male" {% if audit.gender == 'male' %}selected{% endif %}>Male</option>
+                    <option value="female" {% if audit.gender == 'female' %}selected{% endif %}>Female</option>
+                </select>
+
+                <br>
+                <button type="submit" class="btn btn-warning">Update</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'list_audits' %}">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#frm_audit').validate({
+        rules: {
+            date: {
+                required: true,
+            },
+            description: {
+                required: true,
+                minlength: 10,
+            },
+            user: {
+                required: true,
+                minlength: 3,
+            },
+            gender: {
+                required: true,
+            },
+        },
+        messages: {
+            date: {
+                required: 'Date is required',
+            },
+            description: {
+                required: 'Description is required',
+                minlength: 'Description must be at least 10 characters long',
+            },
+            user: {
+                required: 'User is required',
+                minlength: 'User name must be at least 3 characters long',
+            },
+            gender: {
+                required: 'Gender is required',
+            },
+        },
+    });
+</script>
+
+{% endblock %}

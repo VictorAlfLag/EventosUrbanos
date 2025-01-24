@@ -11,40 +11,40 @@
 <br>
 <div class="card">
     <div class="card-title text-center">
-        <h3><b>Listado de Artistas</b></h3>
+        <h3><b>Artist List</b></h3>
     </div>
 </div>  
 <br>
 <div style="text-align: center;">
-    <a href="{% url 'nuevo_artista' %}" class="btn btn-success">Agregar Artista</a>
-    <button class="btn btn-primary" onclick="printTable()">Imprimir Reporte</button>
+    <a href="{% url 'new_artist' %}" class="btn btn-success">Add Artist</a>
+    <button class="btn btn-primary" onclick="printTable()">Print Report</button>
 </div>
-<table class="table table-bordered table-striped table-hover text-center" id="tbl-artistas"> 
+<table class="table table-bordered table-striped table-hover text-center" id="tbl-artists"> 
     <thead>
         <tr>
-            <th>Id del Artista</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Teléfono</th>
+            <th>Artist ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Phone</th>
             <th>Email</th>
-            <th>Redes Sociales</th>
-            <th>Sitio Web</th>
-            <th>Acciones</th>
+            <th>Social Media</th>
+            <th>Website</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        {% for artista in listado_artistas %}
+        {% for artist in artist_list %}
         <tr>
-            <td>{{ artista.id }}</td>
-            <td>{{ artista.nombre }}</td>
-            <td>{{ artista.descripcion }}</td>
-            <td>{{ artista.telefono }}</td>
-            <td>{{ artista.email }}</td>
-            <td>{{ artista.redes_sociales }}</td>
-            <td>{{ artista.sitio_web }}</td>
+            <td>{{ artist.id }}</td>
+            <td>{{ artist.name }}</td>
+            <td>{{ artist.description }}</td>
+            <td>{{ artist.phone }}</td>
+            <td>{{ artist.email }}</td>
+            <td>{{ artist.social_media }}</td>
+            <td>{{ artist.website }}</td>
             <td>
-                <a href="{% url 'editarArtista' artista.id %}" class="btn btn-warning">Editar</a>
-                <a href="{% url 'eliminarArtista' artista.id %}" onclick="return confirm('¿Estás seguro de eliminar?')" class="btn btn-danger">Eliminar</a>
+                <a href="{% url 'edit_artist' artist.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'delete_artist' artist.id %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a>
             </td>
         </tr>
         {% endfor %}
@@ -53,11 +53,11 @@
 
 <script>
     $(document).ready(function() {
-        $('#tbl-artistas').DataTable();
+        $('#tbl-artists').DataTable();
     });
 
     function printTable() {
-        var printContents = document.getElementById('tbl-artistas').outerHTML;
+        var printContents = document.getElementById('tbl-artists').outerHTML;
         var originalContents = document.body.innerHTML;
         document.body.innerHTML = printContents;
         window.print();

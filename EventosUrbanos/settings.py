@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'EventosUrbanos.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'PoryectoEvento',  
+        'USER': 'utc2024',        
+        'PASSWORD': 'Tesis2024-2025',  
+        'HOST': 'localhost',      
+        'PORT': '5432',          
     }
 }
 

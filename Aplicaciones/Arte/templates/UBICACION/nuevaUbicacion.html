@@ -4,74 +4,55 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'guardarPublicacionEvento' %}" enctype="multipart/form-data" method="post" id="frm_publicacion_evento">
+            <form action="{% url 'save_location' %}" method="post" id="frm_location">
                 {% csrf_token %}
                 
-                <label for="evento">Evento: <br></label>
-                <select name="evento" class="form-control" id="evento">
-                    {% for evento in eventos %}
-                    <option value="{{ evento.id }}">{{ evento.titulo }}</option>
-                    {% endfor %}
-                </select>
+                <label for="name">Location Name: <br></label>
+                <input type="text" name="name" class="form-control" id="name" placeholder="Enter the location name">
 
-                <label for="hora_evento">Hora del Evento: <br></label>
-                <input type="time" name="hora_evento" class="form-control" id="hora_evento">
+                <label for="address">Address: <br></label>
+                <input type="text" name="address" class="form-control" id="address" placeholder="Enter the location address">
 
-                <label for="contenido_publico">Contenido Público: <br></label>
-                <textarea name="contenido_publico" class="form-control" id="contenido_publico" placeholder="Ingrese el contenido para la publicación del evento"></textarea>
-
-                <label for="imagen_evento">Imagen del Evento: <br></label>
-                <input type="file" name="imagen_evento" class="form-control" id="imagen_evento" accept="image/*">
-
-                <label for="estado_publicacion">Estado de la Publicación: <br></label>
-                <select name="estado_publicacion" class="form-control" id="estado_publicacion">
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                </select>
+                <label for="description">Description: <br></label>
+                <textarea name="description" class="form-control" id="description" placeholder="Enter a description of the location"></textarea>
 
                 <br>
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="submit" class="btn btn-success">Save</button>
             </form>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $('#frm_publicacion_evento').validate({
+    $('#frm_location').validate({
         rules: {
-            evento: {
+            name: {
                 required: true,
+                minlength: 3,
+                maxlength: 255,
             },
-            hora_evento: {
+            address: {
                 required: true,
+                minlength: 5,
             },
-            contenido_publico: {
+            description: {
                 required: true,
                 minlength: 10,
             },
-            imagen_evento: {
-                required: true,
-            },
-            estado_publicacion: {
-                required: true,
-            },
         },
         messages: {
-            evento: {
-                required: 'El evento es obligatorio',
+            name: {
+                required: 'The location name is required',
+                minlength: 'The name must be at least 3 characters long',
+                maxlength: 'The name must be less than 255 characters long',
             },
-            hora_evento: {
-                required: 'La hora del evento es obligatoria',
+            address: {
+                required: 'The address is required',
+                minlength: 'The address must be at least 5 characters long',
             },
-            contenido_publico: {
-                required: 'El contenido público es obligatorio',
-                minlength: 'El contenido debe tener al menos 10 caracteres',
-            },
-            imagen_evento: {
-                required: 'La imagen es obligatoria',
-            },
-            estado_publicacion: {
-                required: 'El estado de la publicación es obligatorio',
+            description: {
+                required: 'The description is required',
+                minlength: 'The description must be at least 10 characters long',
             },
         },
     });

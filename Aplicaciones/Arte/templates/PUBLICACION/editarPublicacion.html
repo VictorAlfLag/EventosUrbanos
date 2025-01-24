@@ -1,77 +1,108 @@
 {% extends "plantilla.html" %}
+
 {% block body %}
 
-<h1>EDITAR PUBLICACIÓN DE EVENTO</h1>
+<h1>EDIT EVENT PUBLICATION</h1>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'procesoActualizarPublicacionEvento' %}" method="post" id="frm_publicacion_evento">
+            <form action="{% url 'process_update_event_publication' %}" method="post" enctype="multipart/form-data" id="frm_event_publication">
                 {% csrf_token %}
-                <input type="hidden" name="id" value="{{ publicacion.id }}">
+                <input type="hidden" name="id" value="{{ publication.id }}">
                 
-                <label for="evento"><b>Evento:</b></label>
-                <input type="text" name="evento" class="form-control" value="{{ publicacion.evento }}" id="evento" placeholder="Ingrese el evento">
+                <label for="event"><b>Event:</b></label>
+                <select name="event" class="form-control" id="event">
+                    {% for event in events %}
+                    <option value="{{ event.id }}" {% if publication.event.id == event.id %}selected{% endif %}>{{ event.title }}</option>
+                    {% endfor %}
+                </select>
 
-                <label for="hora_evento"><b>Hora del Evento:</b></label>
-                <input type="time" name="hora_evento" class="form-control" value="{{ publicacion.hora_evento }}">
+                <label for="event_time"><b>Event Time:</b></label>
+                <input type="time" name="event_time" class="form-control" value="{{ publication.event_time }}">
 
-                <label for="contenido_publico"><b>Contenido Público:</b></label>
-                <textarea name="contenido_publico" class="form-control" id="contenido_publico" placeholder="Ingrese el contenido público del evento">{{ publicacion.contenido_publico }}</textarea>
+                <label for="public_content"><b>Public Content:</b></label>
+                <textarea name="public_content" class="form-control" id="public_content" placeholder="Enter the public content of the event">{{ publication.public_content }}</textarea>
 
-                <label for="imagen_evento"><b>Imagen del Evento:</b></label>
-                <input type="file" name="imagen_evento" class="form-control" accept="image/*">
+                <label for="event_image"><b>Event Image:</b></label>
+                <input type="file" name="event_image" class="form-control" accept="image/*">
 
-                <label for="estado_publicacion"><b>Estado de Publicación:</b></label>
-                <select name="estado_publicacion" id="estado_publicacion" class="form-control">
-                    <option value="publicado" {% if publicacion.estado_publicacion == 'publicado' %}selected{% endif %}>Publicado</option>
-                    <option value="no_publicado" {% if publicacion.estado_publicacion == 'no_publicado' %}selected{% endif %}>No Publicado</option>
+                <label for="publication_status"><b>Publication Status:</b></label>
+                <select name="publication_status" id="publication_status" class="form-control">
+                    <option value="active" {% if publication.publication_status == 'active' %}selected{% endif %}>Active</option>
+                    <option value="inactive" {% if publication.publication_status == 'inactive' %}selected{% endif %}>Inactive</option>
+                </select>
+
+                <label for="presented_artists"><b>Presented Artists:</b></label>
+                <select name="presented_artists" class="form-control" id="presented_artists" multiple>
+                    {% for artist in artists %}
+                    <option value="{{ artist.id }}" {% if artist in publication.presented_artists.all %}selected{% endif %}>{{ artist.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="event_location"><b>Event Location:</b></label>
+                <select name="event_location" class="form-control" id="event_location">
+                    {% for location in locations %}
+                    <option value="{{ location.id }}" {% if publication.event_location.id == location.id %}selected{% endif %}>{{ location.name }}</option>
+                    {% endfor %}
                 </select>
 
                 <br>
-                <button type="submit" class="btn btn-warning">Actualizar</button>
+                <button type="submit" class="btn btn-warning">Update</button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="{% url 'listado_publicaciones' %}">Cancelar</a>
+                <a href="{% url 'event_publications_list' %}">Cancel</a>
             </form>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $('#frm_publicacion_evento').validate({
+    $('#frm_event_publication').validate({
         rules: {
-            evento: {
+            event: {
                 required: true,
             },
-            hora_evento: {
+            event_time: {
                 required: true,
             },
-            contenido_publico: {
+            public_content: {
                 required: true,
                 minlength: 10,
             },
-            imagen_evento: {
+            event_image: {
                 required: false,
             },
-            estado_publicacion: {
+            publication_status: {
+                required: true,
+            },
+            presented_artists: {
+                required: true,
+            },
+            event_location: {
                 required: true,
             },
         },
         messages: {
-            evento: {
-                required: 'El evento es obligatorio',
+            event: {
+                required: 'The event is required',
             },
-            hora_evento: {
-                required: 'La hora del evento es obligatoria',
+            event_time: {
+                required: 'The event time is required',
             },
-            contenido_publico: {
-                required: 'El contenido público es obligatorio',
-                minlength: 'El contenido debe tener al menos 10 caracteres',
+            public_content: {
+                required: 'The public content is required',
+                minlength: 'The content must be at least 10 characters long',
             },
-            imagen_evento: {
-                required: 'La imagen es obligatoria',
+            event_image: {
+                required: 'The image is required',
             },
-            estado_publicacion: {
-                required: 'El estado de la publicación es obligatorio',
+            publication_status: {
+                required: 'The publication status is required',
+            },
+            presented_artists: {
+                required: 'At least one artist must be selected',
+            },
+            event_location: {
+                required: 'The event location is required',
             },
         },
     });

@@ -1,0 +1,72 @@
+{% extends "plantilla.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'save_license' %}" method="post" id="frm_license">
+                {% csrf_token %}
+                
+                <label for="type">License Type: <br></label>
+                <select name="type" class="form-control" id="type">
+                    <option value="professional">Professional</option>
+                    <option value="normal">Normal</option>
+                </select>
+
+                <label for="cost">Cost: <br></label>
+                <input type="number" name="cost" class="form-control" id="cost" placeholder="Enter the cost">
+
+                <label for="initials">Initials: <br></label>
+                <input type="text" name="initials" class="form-control" id="initials" placeholder="Enter the initials">
+
+                <label for="status">Status: <br></label>
+                <select name="status" class="form-control" id="status">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="expired">Expired</option>
+                </select>
+
+                <br>
+                <button type="submit" class="btn btn-success">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#frm_license').validate({
+        rules: {
+            type: {
+                required: true,
+            },
+            cost: {
+                required: true,
+                number: true,
+            },
+            initials: {
+                required: true,
+                minlength: 3,
+            },
+            status: {
+                required: true,
+            },
+        },
+        messages: {
+            type: {
+                required: 'License type is required',
+            },
+            cost: {
+                required: 'Cost is required',
+                number: 'Please enter a valid number',
+            },
+            initials: {
+                required: 'Initials are required',
+                minlength: 'Initials must be at least 3 characters long',
+            },
+            status: {
+                required: 'Status is required',
+            },
+        },
+    });
+</script>
+{% endblock %}

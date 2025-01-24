@@ -1,4 +1,5 @@
 {% extends "plantilla.html" %}
+
 {% block body %}
 
 <style>
@@ -11,40 +12,40 @@
 <br>
 <div class="card">
     <div class="card-title text-center">
-        <h3><b>Listado de Organizadores</b></h3>
+        <h3><b>Organizer List</b></h3>
     </div>
 </div>  
 <br>
 <div style="text-align: center;">
-    <a href="{% url 'nuevoOrganizador' %}" class="btn btn-success">Agregar Organizador</a>
-    <button class="btn btn-primary" onclick="printTable()">Imprimir Reporte</button>
+    <a href="{% url 'new_organizer' %}" class="btn btn-success">Add Organizer</a>
+    <button class="btn btn-primary" onclick="printTable()">Print Report</button>
 </div>
-<table class="table table-bordered table-striped table-hover text-center" id="tbl-organizadores"> 
+<table class="table table-bordered table-striped table-hover text-center" id="tbl-organizers"> 
     <thead>
         <tr>
-            <th>Id del Organizador</th>
-            <th>Nombre</th>
-            <th>Entidad</th>
-            <th>Descripción</th>
-            <th>Contacto</th>
-            <th>Email de Contacto</th>
-            <th>Sitio Web</th>
-            <th>Acciones</th>
+            <th>Organizer ID</th>
+            <th>Name</th>
+            <th>Entity</th>
+            <th>Description</th>
+            <th>Contact</th>
+            <th>Contact Email</th>
+            <th>Website</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        {% for organizador in listado_organizadores %}
+        {% for organizer in organizer_list %}
         <tr>
-            <td>{{ organizador.id }}</td>
-            <td>{{ organizador.nombre }}</td>
-            <td>{{ organizador.entidad }}</td>
-            <td>{{ organizador.descripcion }}</td>
-            <td>{{ organizador.contacto }}</td>
-            <td>{{ organizador.email_contacto }}</td>
-            <td>{{ organizador.sitio_web }}</td>
+            <td>{{ organizer.id }}</td>
+            <td>{{ organizer.name }}</td>
+            <td>{{ organizer.entity }}</td>
+            <td>{{ organizer.description }}</td>
+            <td>{{ organizer.contact }}</td>
+            <td>{{ organizer.contact_email }}</td> 
+            <td>{{ organizer.website }}</td>
             <td>
-                <a href="{% url 'editarOrganizador' organizador.id %}" class="btn btn-warning">Editar</a>
-                <a href="{% url 'eliminarOrganizador' organizador.id %}" onclick="return confirm('¿Estás seguro de eliminar?')" class="btn btn-danger">Eliminar</a>
+                <a href="{% url 'edit_organizer' organizer.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'delete_organizer' organizer.id %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a>
             </td>
         </tr>
         {% endfor %}
@@ -53,11 +54,11 @@
 
 <script>
     $(document).ready(function() {
-        $('#tbl-organizadores').DataTable();
+        $('#tbl-organizers').DataTable();
     });
 
     function printTable() {
-        var printContents = document.getElementById('tbl-organizadores').outerHTML;
+        var printContents = document.getElementById('tbl-organizers').outerHTML;
         var originalContents = document.body.innerHTML;
         document.body.innerHTML = printContents;
         window.print();

@@ -1,62 +1,62 @@
 {% extends "plantilla.html" %}
 {% block body %}
 
-<h1>EDITAR UBICACIÓN</h1>
+<h1>EDIT LOCATION</h1>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'procesoActualizarUbicacion' %}" method="post" id="frm_ubicacion">
+            <form action="{% url 'update_location' id=location.id %}" method="post" id="frm_location">
                 {% csrf_token %}
-                <input type="hidden" name="id" value="{{ ubicacion.id }}">
+                <input type="hidden" name="id" value="{{ location.id }}">
                 
-                <label for="nombre"><b>Nombre de la Ubicación:</b></label>
-                <input type="text" name="nombre" class="form-control" value="{{ ubicacion.nombre }}" id="nombre" placeholder="Ingrese el nombre de la ubicación">
+                <label for="name"><b>Location Name:</b></label>
+                <input type="text" name="name" class="form-control" value="{{ location.name }}" id="name" placeholder="Enter the location name">
 
-                <label for="direccion"><b>Dirección:</b></label>
-                <input type="text" name="direccion" class="form-control" value="{{ ubicacion.direccion }}" id="direccion" placeholder="Ingrese la dirección de la ubicación">
+                <label for="address"><b>Address:</b></label>
+                <input type="text" name="address" class="form-control" value="{{ location.address }}" id="address" placeholder="Enter the location address">
 
-                <label for="descripcion"><b>Descripción:</b></label>
-                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese una descripción de la ubicación">{{ ubicacion.descripcion }}</textarea>
+                <label for="description"><b>Description:</b></label>
+                <textarea name="description" class="form-control" id="description" placeholder="Enter a description of the location">{{ location.description }}</textarea>
 
                 <br>
-                <button type="submit" class="btn btn-warning">Actualizar</button>
+                <button type="submit" class="btn btn-warning">Update</button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="{% url 'listado_ubicaciones' %}">Cancelar</a>
+                <a href="{% url 'list_locations' %}">Cancel</a>
             </form>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $('#frm_ubicacion').validate({
+    $('#frm_location').validate({
         rules: {
-            nombre: {
+            name: {
                 required: true,
                 minlength: 3,
                 maxlength: 255,
             },
-            direccion: {
+            address: {
                 required: true,
                 minlength: 5,
             },
-            descripcion: {
+            description: {
                 required: true,
                 minlength: 10,
             },
         },
         messages: {
-            nombre: {
-                required: 'El nombre de la ubicación es obligatorio',
-                minlength: 'El nombre debe tener al menos 3 caracteres',
-                maxlength: 'El nombre debe tener menos de 255 caracteres',
+            name: {
+                required: 'The location name is required',
+                minlength: 'The name must be at least 3 characters long',
+                maxlength: 'The name must be less than 255 characters long',
             },
-            direccion: {
-                required: 'La dirección es obligatoria',
-                minlength: 'La dirección debe tener al menos 5 caracteres',
+            address: {
+                required: 'The address is required',
+                minlength: 'The address must be at least 5 characters long',
             },
-            descripcion: {
-                required: 'La descripción es obligatoria',
-                minlength: 'La descripción debe tener al menos 10 caracteres',
+            description: {
+                required: 'The description is required',
+                minlength: 'The description must be at least 10 characters long',
             },
         },
     });

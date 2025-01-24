@@ -4,29 +4,29 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'guardarArtista' %}" enctype="multipart/form-data" method="post" id="frm_artista">
+            <form action="{% url 'save_artist' %}" enctype="multipart/form-data" method="post" id="frm_artist">
                 {% csrf_token %}
                 
-                <label for="nombre">Nombre del Artista: <br></label>
-                <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre del artista">
+                <label for="nombre">Artist Name: <br></label>
+                <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Enter the artist's name">
 
-                <label for="descripcion">Descripción: <br></label>
-                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese una descripción del artista"></textarea>
+                <label for="descripcion">Description: <br></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Enter a description of the artist"></textarea>
 
-                <label for="telefono">Teléfono: <br></label>
-                <input type="text" name="telefono" class="form-control" id="telefono" placeholder="Ingrese el teléfono del artista">
+                <label for="telefono">Phone: <br></label>
+                <input type="text" name="telefono" class="form-control" id="telefono" placeholder="Enter the artist's phone number">
 
-                <label for="email">Correo Electrónico: <br></label>
-                <input type="email" name="email" class="form-control" id="email" placeholder="Ingrese el correo electrónico del artista">
+                <label for="email">Email: <br></label>
+                <input type="email" name="email" class="form-control" id="email" placeholder="Enter the artist's email">
 
-                <label for="redes_sociales">Redes Sociales: <br></label>
-                <textarea name="redes_sociales" class="form-control" id="redes_sociales" placeholder="Ingrese las redes sociales del artista"></textarea>
+                <label for="redes_sociales">Social Media: <br></label>
+                <textarea name="redes_sociales" class="form-control" id="redes_sociales" placeholder="Enter the artist's social media"></textarea>
 
-                <label for="sitio_web">Sitio Web: <br></label>
-                <input type="url" name="sitio_web" class="form-control" id="sitio_web" placeholder="Ingrese el sitio web del artista">
+                <label for="sitio_web">Website: <br></label>
+                <input type="url" name="sitio_web" class="form-control" id="sitio_web" placeholder="Enter the artist's website">
 
                 <br>
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="submit" class="btn btn-success">Save</button>
             </form>
         </div>
     </div>
@@ -35,9 +35,9 @@
 <script type="text/javascript">
     $.validator.addMethod('lettersonly', function (value, element) {
         return this.optional(element) || /^[a-zA-Z\s]*$/.test(value);
-    }, 'Solo se permiten letras en este campo');
+    }, 'Only letters are allowed in this field');
 
-    $('#frm_artista').validate({
+    $('#frm_artist').validate({
         rules: {
             nombre: {
                 required: true,
@@ -67,24 +67,24 @@
         },
         messages: {
             nombre: {
-                required: 'El nombre del artista es obligatorio',
-                minlength: 'El nombre debe tener al menos 3 caracteres',
-                maxlength: 'El nombre debe tener menos de 255 caracteres',
+                required: 'Artist name is required',
+                minlength: 'The name must be at least 3 characters long',
+                maxlength: 'The name must be less than 255 characters',
             },
             descripcion: {
-                required: 'La descripción es obligatoria',
-                minlength: 'La descripción debe tener al menos 10 caracteres',
+                required: 'Description is required',
+                minlength: 'The description must be at least 10 characters long',
             },
             telefono: {
-                minlength: 'El teléfono debe tener al menos 7 caracteres',
-                maxlength: 'El teléfono debe tener menos de 15 caracteres',
+                minlength: 'Phone number must be at least 7 characters long',
+                maxlength: 'Phone number must be less than 15 characters long',
             },
             email: {
-                required: 'El correo electrónico es obligatorio',
-                email: 'Por favor, ingrese un correo electrónico válido',
+                required: 'Email is required',
+                email: 'Please enter a valid email address',
             },
             sitio_web: {
-                url: 'Por favor, ingrese una URL válida',
+                url: 'Please enter a valid URL',
             },
         },
     });

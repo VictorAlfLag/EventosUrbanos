@@ -1,4 +1,5 @@
 {% extends "plantilla.html" %}
+
 {% block body %}
 
 <style>
@@ -11,44 +12,44 @@
 <br>
 <div class="card">
     <div class="card-title text-center">
-        <h3><b>Listado de Publicaciones de Eventos</b></h3>
+        <h3><b>Event Publications List</b></h3>
     </div>
 </div>  
 <br>
 <div style="text-align: center;">
-    <a href="{% url 'nuevaPublicacionEvento' %}" class="btn btn-success">Agregar Publicación</a>
-    <button class="btn btn-primary" onclick="printTable()">Imprimir Reporte</button>
+    <a href="{% url 'new_event_publication' %}" class="btn btn-success">Add Publication</a>
+    <button class="btn btn-primary" onclick="printTable()">Print Report</button>
 </div>
-<table class="table table-bordered table-striped table-hover text-center" id="tbl-publicaciones-eventos"> 
+<table class="table table-bordered table-striped table-hover text-center" id="tbl-event-publications"> 
     <thead>
         <tr>
-            <th>Id de la Publicación</th>
-            <th>Evento</th>
-            <th>Fecha Publicación</th>
-            <th>Hora Evento</th>
-            <th>Estado</th>
-            <th>Imagen</th>
-            <th>Acciones</th>
+            <th>Publication ID</th>
+            <th>Event</th>
+            <th>Publication Date</th>
+            <th>Event Time</th>
+            <th>Status</th>
+            <th>Image</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        {% for publicacion in listado_publicaciones %}
+        {% for publication in event_publications_list %}
         <tr>
-            <td>{{ publicacion.id }}</td>
-            <td>{{ publicacion.evento.titulo }}</td>
-            <td>{{ publicacion.fecha_publicacion }}</td>
-            <td>{{ publicacion.hora_evento }}</td>
-            <td>{{ publicacion.estado_publicacion }}</td>
+            <td>{{ publication.id }}</td>
+            <td>{{ publication.event.title }}</td>
+            <td>{{ publication.publication_date }}</td>
+            <td>{{ publication.event_time }}</td>
+            <td>{{ publication.publication_status }}</td>
             <td>
-                {% if publicacion.imagen_evento %}
-                    <img src="{{ publicacion.imagen_evento.url }}" width="100" />
+                {% if publication.event_image %}
+                    <img src="{{ publication.event_image.url }}" width="100" />
                 {% else %}
-                    No disponible
+                    Not available
                 {% endif %}
             </td>
             <td>
-                <a href="{% url 'editarPublicacionEvento' publicacion.id %}" class="btn btn-warning">Editar</a>
-                <a href="{% url 'eliminarPublicacionEvento' publicacion.id %}" onclick="return confirm('¿Estás seguro de eliminar?')" class="btn btn-danger">Eliminar</a>
+                <a href="{% url 'edit_event_publication' publication.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'delete_event_publication' publication.id %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a>
             </td>
         </tr>
         {% endfor %}
@@ -57,11 +58,11 @@
 
 <script>
     $(document).ready(function() {
-        $('#tbl-publicaciones-eventos').DataTable();
+        $('#tbl-event-publications').DataTable();
     });
 
     function printTable() {
-        var printContents = document.getElementById('tbl-publicaciones-eventos').outerHTML;
+        var printContents = document.getElementById('tbl-event-publications').outerHTML;
         var originalContents = document.body.innerHTML;
         document.body.innerHTML = printContents;
         window.print();

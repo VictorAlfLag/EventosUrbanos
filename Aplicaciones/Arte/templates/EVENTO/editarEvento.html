@@ -1,0 +1,123 @@
+{% extends "plantilla.html" %}
+{% block body %}
+
+<h1>EDIT EVENT</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'update_event' id=event.id %}" method="post" id="frm_event">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ evento.id }}">
+
+                <label for="titulo"><b>Event Title:</b></label>
+                <input type="text" name="titulo" class="form-control" value="{{ evento.titulo }}" id="titulo" placeholder="Enter the event title">
+
+                <label for="descripcion"><b>Description:</b></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Enter a description of the event">{{ evento.descripcion }}</textarea>
+
+                <label for="fecha_inicio"><b>Start Date:</b></label>
+                <input type="datetime-local" name="fecha_inicio" class="form-control" value="{{ evento.fecha_inicio|date:'Y-m-d\TH:i' }}" id="fecha_inicio">
+
+                <label for="fecha_fin"><b>End Date:</b></label>
+                <input type="datetime-local" name="fecha_fin" class="form-control" value="{{ evento.fecha_fin|date:'Y-m-d\TH:i' }}" id="fecha_fin">
+
+                <label for="estado"><b>Status:</b></label>
+                <select name="estado" class="form-control" id="estado">
+                    <option value="activo" {% if evento.estado == 'activo' %}selected{% endif %}>Active</option>
+                    <option value="finalizado" {% if evento.estado == 'finalizado' %}selected{% endif %}>Finished</option>
+                </select>
+
+                <label for="artista"><b>Artist:</b></label>
+                <select name="artista" class="form-control" id="artista">
+                    {% for artista in artistas %}
+                        <option value="{{ artista.id }}" {% if evento.artista.id == artista.id %}selected{% endif %}>{{ artista.nombre }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="organizador"><b>Organizer:</b></label>
+                <select name="organizador" class="form-control" id="organizador">
+                    {% for organizador in organizadores %}
+                        <option value="{{ organizador.id }}" {% if evento.organizador.id == organizador.id %}selected{% endif %}>{{ organizador.nombre }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="ubicacion"><b>Location:</b></label>
+                <select name="ubicacion" class="form-control" id="ubicacion">
+                    {% for ubicacion in ubicaciones %}
+                        <option value="{{ ubicacion.id }}" {% if evento.ubicacion.id == ubicacion.id %}selected{% endif %}>{{ ubicacion.nombre }}</option>
+                    {% endfor %}
+                </select>
+
+                <br>
+                <button type="submit" class="btn btn-warning">Update</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'list_events' %}">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#frm_event').validate({
+        rules: {
+            titulo: {
+                required: true,
+                minlength: 3,
+                maxlength: 255,
+            },
+            descripcion: {
+                required: true,
+                minlength: 10,
+            },
+            fecha_inicio: {
+                required: true,
+            },
+            fecha_fin: {
+                required: true,
+            },
+            estado: {
+                required: true,
+            },
+            artista: {
+                required: true,
+            },
+            organizador: {
+                required: true,
+            },
+            ubicacion: {
+                required: true,
+            },
+        },
+        messages: {
+            titulo: {
+                required: 'The title is required',
+                minlength: 'The title must be at least 3 characters long',
+                maxlength: 'The title must be less than 255 characters long',
+            },
+            descripcion: {
+                required: 'Description is required',
+                minlength: 'The description must be at least 10 characters long',
+            },
+            fecha_inicio: {
+                required: 'Start date is required',
+            },
+            fecha_fin: {
+                required: 'End date is required',
+            },
+            estado: {
+                required: 'You must select a status',
+            },
+            artista: {
+                required: 'You must select an artist',
+            },
+            organizador: {
+                required: 'You must select an organizer',
+            },
+            ubicacion: {
+                required: 'You must select a location',
+            },
+        },
+    });
+</script>
+
+{% endblock %}

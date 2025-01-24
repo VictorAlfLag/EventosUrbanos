@@ -1,60 +1,83 @@
 {% extends "plantilla.html" %}
+
 {% block body %}
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'guardarUbicacion' %}" method="post" id="frm_ubicacion">
+            <form action="{% url 'save_event_publication' %}" enctype="multipart/form-data" method="post" id="frm_event_publication">
                 {% csrf_token %}
                 
-                <label for="nombre">Nombre de la Ubicación: <br></label>
-                <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre de la ubicación">
+                <!-- Selección de Evento -->
+                <label for="evento">Event: <br></label>
+                <select name="evento" class="form-control" id="evento">
+                    {% for evento in eventos %}
+                    <option value="{{ evento.id }}">{{ evento.title }}</option>
+                    {% endfor %}
+                </select>
 
-                <label for="direccion">Dirección: <br></label>
-                <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Ingrese la dirección de la ubicación">
+                <!-- Hora del Evento -->
+                <label for="hora_evento">Event Time: <br></label>
+                <input type="time" name="hora_evento" class="form-control" id="hora_evento">
 
-                <label for="descripcion">Descripción: <br></label>
-                <textarea name="descripcion" class="form-control" id="descripcion" placeholder="Ingrese una descripción de la ubicación"></textarea>
+                <!-- Contenido Público -->
+                <label for="contenido_publico">Public Content: <br></label>
+                <textarea name="contenido_publico" class="form-control" id="contenido_publico" placeholder="Enter the content for the event publication"></textarea>
+
+                <!-- Imagen del Evento -->
+                <label for="imagen_evento">Event Image: <br></label>
+                <input type="file" name="imagen_evento" class="form-control" id="imagen_evento" accept="image/*">
+
+                <!-- Estado de la Publicación -->
+                <label for="estado_publicacion">Publication Status: <br></label>
+                <select name="estado_publicacion" class="form-control" id="estado_publicacion">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+
+                <!-- Artistas Presentados -->
+                <label for="artistas_presentados">Presented Artists: <br></label>
+                <select name="artistas_presentados" class="form-control" id="artistas_presentados" multiple>
+                    {% for artista in artistas %}
+                    <option value="{{ artista.id }}">{{ artista.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- Ubicación del Evento -->
+                <label for="ubicacion_evento">Event Location: <br></label>
+                <select name="ubicacion_evento" class="form-control" id="ubicacion_evento">
+                    {% for ubicacion in ubicaciones %}
+                    <option value="{{ ubicacion.id }}">{{ ubicacion.name }}</option>
+                    {% endfor %}
+                </select>
 
                 <br>
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="submit" class="btn btn-success">Save</button>
             </form>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $('#frm_ubicacion').validate({
+    $('#frm_event_publication').validate({
         rules: {
-            nombre: {
-                required: true,
-                minlength: 3,
-                maxlength: 255,
-            },
-            direccion: {
-                required: true,
-                minlength: 5,
-            },
-            descripcion: {
-                required: true,
-                minlength: 10,
-            },
+            evento: { required: true },
+            hora_evento: { required: true },
+            contenido_publico: { required: true, minlength: 10 },
+            imagen_evento: { required: true },
+            estado_publicacion: { required: true },
+            artistas_presentados: { required: true },
+            ubicacion_evento: { required: true }
         },
         messages: {
-            nombre: {
-                required: 'El nombre de la ubicación es obligatorio',
-                minlength: 'El nombre debe tener al menos 3 caracteres',
-                maxlength: 'El nombre debe tener menos de 255 caracteres',
-            },
-            direccion: {
-                required: 'La dirección es obligatoria',
-                minlength: 'La dirección debe tener al menos 5 caracteres',
-            },
-            descripcion: {
-                required: 'La descripción es obligatoria',
-                minlength: 'La descripción debe tener al menos 10 caracteres',
-            },
-        },
+            evento: { required: 'The event is required' },
+            hora_evento: { required: 'The event time is required' },
+            contenido_publico: { required: 'The public content is required', minlength: 'The content must be at least 10 characters long' },
+            imagen_evento: { required: 'The image is required' },
+            estado_publicacion: { required: 'The publication status is required' },
+            artistas_presentados: { required: 'You must select at least one artist' },
+            ubicacion_evento: { required: 'The event location is required' }
+        }
     });
 </script>
 
